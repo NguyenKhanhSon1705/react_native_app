@@ -5,8 +5,12 @@ export const COLORS = {
     success: "#28a745",
     danger: "#dc3545",
     warning: "#ffc107",
-    white: "#ffffff",
+    white: "#fff",
     black: "#000000",
+
+    bg_facebook: "#395998",
+    bg_twitter: "#169ce8",
+    bg_apple: "#1b1f2f",
 
     BACKGROUND_DARK: "#4B70F5",
     TEXT_LIGHT: "#FBFBFB",

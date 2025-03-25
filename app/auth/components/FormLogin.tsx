@@ -1,17 +1,19 @@
+import env from "@/constant/envConstant";
 import { ILoginRequestData } from "@/interfaces/auth/LoginType";
+import routes_path from "@/routes/routes_path";
+import authService from "@/services/authService";
 import { COLORS } from "@/themes/ThemeGlobal";
+import accessToken from "@/utils/functions/accessToken";
+import { useTranslate } from "@/utils/hooks/useTranslate";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import {  Text, View } from "react-native"
+import { Text, View } from "react-native"
 import { Button, Checkbox, TextInput } from "react-native-paper"
+import Toast from "react-native-toast-message";
 import styled from "styled-components";
 import * as Yup from "yup";
-
-const schema = Yup.object().shape({
-    email: Yup.string().email("Email không hợp lệ").required("Vui lòng nhập email"),
-    password: Yup.string().min(6, "Mật khẩu ít nhất 6 ký tự").required("Vui lòng nhập mật khẩu"),
-});
 
 const CustomFogotPassowrd = styled(View)`
     display: flex;
@@ -30,15 +32,39 @@ const CustomCheckbox = styled(View)`
     justify-content:center;
 `
 
-
 const FormLogin: React.FC = () => {
+    const textConfig = useTranslate();
+    const schema = Yup.object().shape({
+        email: Yup.string().email(textConfig("00013")).required(textConfig("00014")),
+        password: Yup.string().min(3, textConfig("00016")).required(textConfig("00015")),
+    });
     const { control, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(schema),
     });
+    const router = useRouter()
+    const [loading, setLoading] = useState<boolean>(false);
     const [checked, setChecked] = useState<boolean>(false)
 
-    const onSubmit = (data: ILoginRequestData) => {
-        console.log("Dữ liệu hợp lệ:", data);
+    const onSubmit = async (data: ILoginRequestData) => {
+        setLoading(true);
+        const result = await authService.login(data)
+        if(result.data.isSuccess){
+            Toast.show({
+                text1: textConfig("00018"),
+                text2: result.data.message,
+                type: "success",
+            });
+            await accessToken.setAccessToken(result.data.data.accessToken)
+            router.push(routes_path.CHOOSESHOP)
+            setLoading(false);
+        }else{
+            Toast.show({
+                text1: textConfig("00018"),
+                text2: result.data.message,
+                type: "error",
+            });
+            setLoading(false);
+        }
     };
     return (
         <View>
@@ -74,7 +100,7 @@ const FormLogin: React.FC = () => {
                             roundness: 10, // Bo góc input
                         }}
                         textColor='#4c4e57'
-                        label="Mật khẩu"
+                        label={textConfig("00011")}
                         mode="outlined"
                         value={value}
                         onChangeText={onChange}
@@ -102,12 +128,14 @@ const FormLogin: React.FC = () => {
                             color="#cccc"
                         ></Checkbox>
                     </CustomCheckbox>
-                    <Text style={{ marginLeft: 5 }}>Nhớ tài khoản</Text>
+                    <Text style={{ marginLeft: 5 }}>{textConfig("00007")}</Text>
                 </View>
-                <Text>Quên mật khẩu?</Text>
+                <Text>{textConfig("00008")}</Text>
             </CustomFogotPassowrd>
             <View style={{ marginTop: 10 }}>
                 <Button
+                    loading={loading}
+                    disabled={loading}
                     mode="outlined"
                     onPress={handleSubmit(onSubmit)}
                     textColor="white"
@@ -118,7 +146,7 @@ const FormLogin: React.FC = () => {
                         borderColor: 'transparent',
 
                     }}
-                >Đăng nhập</Button>
+                >{textConfig("00001")}</Button>
             </View>
         </View>
 

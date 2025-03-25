@@ -1,3 +1,4 @@
+import { COLORS } from "@/themes/ThemeGlobal"
 import { FC, useEffect, useState } from "react"
 import { View } from "react-native"
 import { Button, List, Menu } from "react-native-paper"
@@ -9,15 +10,15 @@ interface IItems {
 
 interface IProps {
     items: IItems[],
-    valueCallback: any,
-    style?: any , 
+    style?: any,
     icon?: string | any,
     title?: string,
     defaultValue?: any,
     mode?: 'text' | 'outlined' | 'contained' | 'elevated' | 'contained-tonal'
+    valueCallback?: (value: any) => void,
 }
 
-const DropDownButton: FC<IProps> = ({title , defaultValue, items , valueCallback , style , icon , mode = "outlined" }) => {
+const DropDownButton: FC<IProps> = ({ title, defaultValue, items, valueCallback, style, icon, mode = "outlined" }) => {
     const [visible, setVisible] = useState(false);
     const [value, setValue] = useState<IItems>();
     const openMenu = () => setVisible(true);
@@ -27,9 +28,9 @@ const DropDownButton: FC<IProps> = ({title , defaultValue, items , valueCallback
         setValue(items.find(({ key }) => key === defaultValue))
     }, []);
 
-    const handleSelect = (value : IItems) => {
+    const handleSelect = (value: IItems) => {
         setValue(value);
-        valueCallback(value.key)
+        valueCallback?.(value.key)
         closeMenu();
     };
     return (
@@ -39,10 +40,11 @@ const DropDownButton: FC<IProps> = ({title , defaultValue, items , valueCallback
                 onDismiss={closeMenu}
                 anchor={
                     <Button
-                    icon={icon}
-                    mode= {mode}
-                    onPress={openMenu}
-                    style = {style}
+                        icon={icon}
+                        mode={mode}
+                        onPress={openMenu}
+                        style={style}
+                        textColor="white"
                     >{value?.label}
                     </Button>
                 }
@@ -53,7 +55,7 @@ const DropDownButton: FC<IProps> = ({title , defaultValue, items , valueCallback
                         <List.Item
                             key={key}
                             title={label}
-                            onPress={() => handleSelect({key, label})}
+                            onPress={() => handleSelect({ key, label })}
                         />
                     ))}
                 </List.Section>

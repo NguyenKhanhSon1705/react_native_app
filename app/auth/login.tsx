@@ -4,6 +4,9 @@ import styled from "styled-components";
 import FormLogin from "./components/FormLogin";
 import { FontAwesome } from "@expo/vector-icons";
 import Languages from "@/components/languages";
+import { useEffect } from "react";
+import { useTranslate } from "@/utils/hooks/useTranslate";
+import { COLORS } from "@/themes/ThemeGlobal";
 const Container = styled(View)`
     position: relative;
     flex: 1;
@@ -54,7 +57,7 @@ const ContainerLanguage = styled(View)`
 
 
 const Login = () => {
-    
+    const textConfig = useTranslate()
     return (
         <TouchableWithoutFeedback >
             <Container>
@@ -63,25 +66,25 @@ const Login = () => {
                 </ContainerLanguage>
                 <ContainerHead >
                     <Text
-                        style={{ color: 'white', fontSize: 24, fontWeight: 'bold', marginBottom: 8 }}>Đăng nhập</Text>
-                    <Text style={{ color: 'white', fontSize: 14 }}>Vui lòng đăng nhập với thông tài khoản của bạn</Text>
+                        style={{ color: 'white', fontSize: 24, fontWeight: 'bold', marginBottom: 8 }}>{textConfig("00001")}</Text>
+                    <Text style={{ color: 'white', fontSize: 14 }}>{textConfig("00006")}</Text>
                 </ContainerHead>
                 <ContainerBody>
                     <FormLogin />
                     <ContainerBodyFooter>
                         <Text>
-                            Bạn chưa có tài khoản? <Text style={{ fontWeight: 'bold', color: '#2196F3' }}>Đăng ký ngay</Text>
+                            {textConfig("00009") }<Text style={{ fontWeight: 'bold', color: '#2196F3' }}>{textConfig("00010")}</Text>
                         </Text>
-                        <Text style={{ marginTop: 10 }}>Hoặc</Text>
+                        <Text style={{ marginTop: 10 }}>{textConfig("00012")}</Text>
                         <ContainerIcon>
-                            <BoxIcon bgColor="#395998">
-                                <FontAwesome color={"#fff"} name="facebook" size={34}></FontAwesome>
+                            <BoxIcon bgColor={COLORS.bg_facebook}>
+                                <FontAwesome color={COLORS.white} name="facebook" size={34}></FontAwesome>
                             </BoxIcon>
-                            <BoxIcon bgColor="#169ce8">
-                                <FontAwesome color={"#fff"} name="twitter" size={34}></FontAwesome>
+                            <BoxIcon bgColor={COLORS.bg_twitter}>
+                                <FontAwesome color={COLORS.white} name="twitter" size={34}></FontAwesome>
                             </BoxIcon>
-                            <BoxIcon bgColor="#1b1f2f">
-                                <FontAwesome color={"#fff"} name="apple" size={34}></FontAwesome>
+                            <BoxIcon bgColor={COLORS.bg_apple}>
+                                <FontAwesome color={COLORS.white} name="apple" size={34}></FontAwesome>
                             </BoxIcon>
                         </ContainerIcon>
                     </ContainerBodyFooter>

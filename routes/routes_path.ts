@@ -2,7 +2,7 @@ const routes_path = {
     START_APP: './auth/StartApp',
     LOGIN : './auth/login',
     HOME: '/',
-    CHOOSESHOP: '/choose'
+    CHOOSESHOP: 'shop/chooseShop'
 
 }
 export default routes_path

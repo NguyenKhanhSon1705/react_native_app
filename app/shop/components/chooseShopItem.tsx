@@ -1,8 +1,8 @@
+import images from "@/assets/images";
 import { FC } from "react";
-import { Text, View } from "react-native";
+import { Image, Text, View } from "react-native";
 import { Avatar } from "react-native-paper";
 import styled from "styled-components";
-import avt from '@/assets/img_login.png'
 const Container = styled(View)`
     padding: 10px ;
     background-color: #fff;
@@ -54,15 +54,17 @@ const Star = styled(Text)`
     color: #ff9800;
     margin-right: 4px;
 `;
-const ChooseShopItem :FC = ()=> {
+
+
+const ChooseShopItem: FC = () => {
     return (
         <Container>
             <ContainerAvt>
                 <AvatarContainer>
-                    <Avatar.Image style= {{
-                        borderRadius: '20',
-                        backgroundColor: 'transparent'
-                    }} size={100} source={avt} />
+                    <Image
+                        source={images.kfc }
+                        style={{ width: 100, height: 100, borderRadius: 5 }} // Không bo tròn
+                    />
                 </AvatarContainer>
                 <ContainerInfo>
                     <InfoHeader>

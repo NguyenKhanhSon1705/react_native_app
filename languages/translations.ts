@@ -1,8 +1,22 @@
 const translations : Record<string,Record<string,string>> = {
+    '00000': {vi: 'Thử' , en: 'Test' , ja: '試す'},
     '00001': {vi: 'Đăng nhập' , en: 'Login' , ja: ''},
     '00002': {vi: 'Đăng ký' , en: 'Register' , ja: ''},
     '00003': {vi: 'Chào mừng bạn đến với ứng dụng quản lý cửa hàng' , en: 'Welcome to the store management application' , ja: ''},
     '00004': {vi: 'Bắt đầu' , en: 'Start' , ja: ''},
     '00005': {vi: 'Bắt đầu' , en: 'Start' , ja: ''},
-
+    '00006': {vi: 'Vui lòng đăng nhập với thông tin tài khoản của bạn' , en: 'Please login with your account information' , ja: ''},
+    '00007': {vi: 'Nhớ tài khoản' , en: 'Remember me' , ja: ''},
+    '00008': {vi: 'Quên mật khẩu?' , en: 'Forgot password?' , ja: ''},
+    '00009': {vi: 'Bạn chưa có tài khoản ' , en: 'You do not have an account ' , ja: ''},
+    '00010': {vi: 'Đăng ký ngày' , en: 'Register now' , ja: ''},
+    '00011': {vi: 'Mật khẩu' , en: 'Password' , ja: ''},
+    '00012': {vi: 'Hoặc' , en: 'Or' , ja: ''},
+    '00013': {vi: 'Email không hợp lệ' , en: 'Invalid email' , ja: ''},
+    '00014': {vi: 'Vui lòng nhập email' , en: 'Please enter your email' , ja: ''},
+    '00015': {vi: 'Vui lòng nhập mật khẩu' , en: 'Please enter the password' , ja: ''},
+    '00016': {vi: 'Mật khẩu ít nhất 6 ký tự' , en: 'Password at least 6 characters' , ja: ''},
+    '00017': {vi: 'Trở lại' , en: 'Back' , ja: ''},
+    '00018': {vi: 'Thông báo' , en: 'Notication' , ja: ''},
 }
+export default translations

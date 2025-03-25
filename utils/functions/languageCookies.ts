@@ -5,8 +5,9 @@ const setLanguageCookie = (value :string): void => {
     setCookie(env.LANGUAGE , value)
 }
 
-const getLanguageCookie = (): Promise<string | undefined> =>{
-    return getCookie(env.LANGUAGE)
+const getLanguageCookie = async (): Promise<string | undefined> => {
+    const result = await getCookie(env.LANGUAGE);
+    return result;
 }
 
 const languagesCookies = {
