@@ -1,16 +1,28 @@
+import { IAppResposeBase } from "@/interfaces/appType";
 import httpRequest from "@/utils/axios/axiosCustom";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-const getListShopUser = createAsyncThunk ( 
+
+interface ListShop {
+    id: string;
+    shopName: string;
+    shopPhone: string;
+    logoShop: string;
+    shopAddress: string;
+    isActive: boolean;
+}
+
+const getListShopUser = createAsyncThunk(
     "shop/getListShopUser",
-    async (_, { rejectWithValue }): Promise<void> => {
+    async (_, { rejectWithValue }): Promise<IAppResposeBase<ListShop>> => {
         try {
-          const user = await httpRequest.get("/api/authen/get-current-user");
-          
+            const listShop: IAppResposeBase<ListShop> = await httpRequest.get("/api/shop/get-list-shop");
+            return listShop;
         } catch (error: any) {
-          return rejectWithValue(error.data) as any;
+            return rejectWithValue(error.data) as any;
         }
-      })
+    })
+
 const shopAction = {
     getListShopUser
 }
