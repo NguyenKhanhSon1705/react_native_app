@@ -4,12 +4,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/stores";
 import areaAction from "@/stores/areaStore/areaThunk";
-import AreaOptionsModal from "./components/areaOptionModal";
-import AreaModal from "./components/editAreaModal";
+import AreaOptionsModal from "../areas/components/areaOptionModal";
+import AreaModal from "../areas/components/editAreaModal";
 import { addAreaData,editAreaData,AreaData } from "@/interfaces/area/AreaDTO";
 
 
-const AreaScreen = () => {
+const TableScreen = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [selectedArea, setSelectedArea] = useState<AreaData | null>(null);
   const [isOptionsModalVisible, setIsOptionsModalVisible] = useState(false);
@@ -195,4 +195,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AreaScreen;
+export default TableScreen;

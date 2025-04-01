@@ -53,7 +53,7 @@ const deleteArea = createAsyncThunk(
     "area/deleteArea",
     async (areaId: number, { rejectWithValue }) => {
         try {
-            const response = await httpRequest.delete<IAppResposeBase<boolean>>(
+            const response = await httpRequest.delete<IAppResposeBase<AreaData>>(
                 `/api/areas/delete-area?id=${areaId}`
             );
             return { ...response.data, areaId };
