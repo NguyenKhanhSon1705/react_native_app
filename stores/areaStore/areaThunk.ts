@@ -1,7 +1,7 @@
 import { IAppResposeBase } from "@/interfaces/appType";
 import httpRequest from "@/utils/axios/axiosCustom";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { AreaData,addAreaData,editAreaData } from "@/interfaces/area/AreaDTO";
+import { AreaData,addAreaData,editAreaData } from "@/interfaces/area/AreaTypes";
 
 
 const getAreaData = createAsyncThunk(
@@ -53,7 +53,7 @@ const deleteArea = createAsyncThunk(
     "area/deleteArea",
     async (areaId: number, { rejectWithValue }) => {
         try {
-            const response = await httpRequest.delete<IAppResposeBase<boolean>>(
+            const response = await httpRequest.delete<IAppResposeBase<AreaData>>(
                 `/api/areas/delete-area?id=${areaId}`
             );
             return { ...response.data, areaId };
