@@ -1,7 +1,7 @@
 import { IAppResposeBase } from "@/interfaces/appType";
 import httpRequest from "@/utils/axios/axiosCustom";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { AreaData,addAreaData,editAreaData } from "@/interfaces/area/AreaDTO";
+import { AreaData,addAreaData,editAreaData } from "@/interfaces/area/AreaTypes";
 
 
 const getAreaData = createAsyncThunk(

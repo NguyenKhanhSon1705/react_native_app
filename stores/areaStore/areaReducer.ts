@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import areaAction from "./areaThunk";
-import { AreaData,addAreaData,editAreaData } from "@/interfaces/area/AreaDTO";
+import { AreaData,addAreaData,editAreaData } from "@/interfaces/area/AreaTypes";
 
 interface AreaState {
     areas: AreaData[];

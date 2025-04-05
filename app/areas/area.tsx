@@ -6,7 +6,7 @@ import { RootState, AppDispatch } from "@/stores";
 import areaAction from "@/stores/areaStore/areaThunk";
 import AreaOptionsModal from "./components/areaOptionModal";
 import AreaModal from "./components/editAreaModal";
-import { addAreaData,editAreaData,AreaData } from "@/interfaces/area/AreaDTO";
+import { addAreaData,editAreaData,AreaData } from "@/interfaces/area/AreaTypes";
 
 
 const AreaScreen = () => {
