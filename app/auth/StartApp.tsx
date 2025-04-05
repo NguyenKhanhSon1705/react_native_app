@@ -11,6 +11,7 @@ const StartApp = () => {
     const nextPage = () => {
         router.push(routes_path.LOGIN)
     }
+    
     return (
         <View style={style.container}>
             <Avatar.Image 
