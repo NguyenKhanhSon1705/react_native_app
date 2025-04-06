@@ -17,7 +17,7 @@ const AreaScreen = () => {
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
 
   useEffect(() => {
-    dispatch(areaAction.getAreaData(5));
+    dispatch(areaAction.getAreaData());
   }, [dispatch]);
 
   const areaList = useSelector((state: RootState) => state.areaStore.areas);
@@ -35,12 +35,8 @@ const AreaScreen = () => {
 
   const handleEdit = () => {
     if (selectedArea) {
-      console.log("Editing area:", selectedArea);
       closeOptionsModal();
-      
-      setTimeout(() => {
-        setIsAreaModalVisible(true);
-      }, 100);
+      setIsAreaModalVisible(true);
     }
   };
 
@@ -56,7 +52,7 @@ const AreaScreen = () => {
           },
           {
             text: "Xóa",
-            onPress: async () => {
+            onPress: () => {
               dispatch(areaAction.deleteArea(selectedArea.id));
             },
             style: "destructive",
@@ -75,11 +71,11 @@ const AreaScreen = () => {
   const handleSaveArea = (areaName: string, areaId?: number) => {
     if (areaId) {
        dispatch(areaAction.updateArea(
-        { id: areaId, areaName, idShop: 5 } as editAreaData
+        { id: areaId, areaName} as editAreaData
        ));
     } else {
        dispatch(areaAction.addArea(
-        { areaName, idShop: 5 } as addAreaData
+        { areaName } as addAreaData
        ));
     }
     closeAreaModal();
@@ -97,7 +93,6 @@ const AreaScreen = () => {
           <Text style={styles.addButtonText}>Thêm mới</Text>
         </TouchableOpacity>
       </View>
-
       <ScrollView contentContainerStyle={styles.gridContainer} showsVerticalScrollIndicator={false}>
         {areaList.map((area: AreaData) => (
           <View key={area.id} style={styles.areaCard}>

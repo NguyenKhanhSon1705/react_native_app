@@ -2,16 +2,21 @@ import { IAppResposeBase } from "@/interfaces/appType";
 import httpRequest from "@/utils/axios/axiosCustom";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { ITableData,ITableRequest } from "@/interfaces/table.ts/TableTypes";
+import cookiesIdShop from "@/utils/functions/cookieIdShop";
 
 
 const getTableData = createAsyncThunk(
     "table/getTableData",
-    async (shopId: number, { rejectWithValue }): Promise<IAppResposeBase<ITableData[]>> => {
+    async (_, { rejectWithValue }): Promise<IAppResposeBase<ITableData[]>> => {
         try {
-            const response = await httpRequest.get<IAppResposeBase<ITableData[]>>(`/api/tables/get-table-area?shopId=${shopId}`);
+            const shopId = await cookiesIdShop.getCookieIdShop();
+            const response = await httpRequest.get<IAppResposeBase<ITableData[]>>(`/api/tables/get-table-area` , {
+                params: {
+                    shopId: shopId
+                }
+            });
             return response.data;
         } catch (error: any) {
-            console.log("API Error:", error);
             return rejectWithValue(error.data) as any;
         }
     }

@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import shopAction from "@/stores/shopStore/shopThunks";
 import { AppDispatch, RootState } from "@/stores";
 import { IShopData } from "@/interfaces/shop/shopDTO";
+import cookiesIdShop from "@/utils/functions/cookieIdShop";
+import routes_path from "@/routes/routes_path";
 
 const Container = styled(View)`
     /* margin-top: 20px; */
@@ -29,11 +31,11 @@ const ChooseShop: FC = () => {
         dispatch(shopAction.getListShopUser());
     }, [])
 
-    const handleGotoShop = (id: any) => {
+    const handleGotoShop = async (id: any) => {
         console.log(id)
+        await cookiesIdShop.setCookieIdShop(id);
+        router.push(routes_path.AREAR)
     }
-    
-
     return (
         <Container>
             <ContainerHeader>

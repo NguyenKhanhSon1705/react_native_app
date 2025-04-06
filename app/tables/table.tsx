@@ -4,8 +4,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/stores";
 
-
-
 import { ITableData , ITableRequest} from "@/interfaces/table.ts/TableTypes";
 import tableAction from "@/stores/tableStore/tableThunk";
 import TableModal from "./components/editTableModal";
@@ -20,7 +18,7 @@ const TableScreen = () => {
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
 
   useEffect(() => {
-    dispatch(tableAction.getTableData(5));
+    dispatch(tableAction.getTableData());
   }, [dispatch]);
 
   const tableList = useSelector((state: RootState) => state.tableStore.tables);
@@ -40,13 +38,12 @@ const TableScreen = () => {
     if (selectedTable) {
       console.log("Editing area:", selectedTable);
       closeOptionsModal();
-      setTimeout(() => {
-        setIsTableModalVisible(true);
-      }, 100);
+      setIsTableModalVisible(true);
     }
   };
 
   const handleDelete = () => {
+    console.log(selectedTable);
     if (selectedTable) {
       Alert.alert(
         "Xóa khu vực",
@@ -58,7 +55,7 @@ const TableScreen = () => {
           },
           {
             text: "Xóa",
-            onPress: async () => {
+            onPress: () => {
               dispatch(tableAction.deleteTable(selectedTable.id));
             },
             style: "destructive",

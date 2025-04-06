@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Modal, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
-import MultiSelect from 'react-native-multiple-select';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/stores';
 import areaAction from '@/stores/areaStore/areaThunk';
 import { ITableData } from '@/interfaces/table.ts/TableTypes';
 import { useMemo } from 'react';
 import Toast from "react-native-toast-message";
+import { Dropdown } from 'react-native-element-dropdown';
 interface TableModalProps {
   visible: boolean;
   onClose: () => void;
@@ -16,10 +16,11 @@ interface TableModalProps {
 
 const TableModal: React.FC<TableModalProps> = ({ visible, onClose, onSave, table }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const [tableName, setTableName] = useState(''); 
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [tableName, setTableName] = useState('');
+  const [selectedItems, setSelectedItems] = useState<any>('');
   const isEditing = !!table;
-
+  const [isFocus, setIsFocus] = useState(false);
+  const areaList = useSelector((state: RootState) => state.areaStore.areas);
 
   useEffect(() => {
     if (visible) {
@@ -27,55 +28,41 @@ const TableModal: React.FC<TableModalProps> = ({ visible, onClose, onSave, table
     }
   }, [dispatch, visible]);
 
-
-  const areaList = useSelector((state: RootState) => state.areaStore.areas);
-
-  // Định dạng
-  const formattedAreaList = useMemo(() => {
-    const list = areaList.map((area) => ({
-      id: area.id.toString(), //  id phasi là string
-      name: area.areaName, // Tên hiển thị
-    }));
-    return list;
-  }, [areaList]);
-
-
   useEffect(() => {
     if (!visible) return;
 
     setTableName(table?.nameTable || '');
-    const areaIdStr = table?.areaId?.toString();
-
+    const areaIdStr = table?.areaId;
+    console.log("areaIdStr",areaIdStr)
     if (areaIdStr) {
-      const exists = formattedAreaList.some((item) => item.id === areaIdStr);
-      setSelectedItems(exists ? [areaIdStr] : []);
+      // const exists = areaList.some((item) => item.id === areaIdStr);
+      setSelectedItems(areaIdStr);
     } else {
-      setSelectedItems([]);
+      setSelectedItems('');
     }
-  }, [visible, table, formattedAreaList]);
+  }, [visible, table]);
 
   const handleSave = () => {
-    if (!selectedItems.length || !tableName.trim()) {
+    if (!selectedItems || !tableName.trim()) {
       Toast.show({
-          text1: "Thông báo",
-          text2: "Vui lòng chọn khu vực và nhập tên bàn",
-          type: "error", 
+        text1: "Thông báo",
+        text2: "Vui lòng chọn khu vực và nhập tên bàn",
+        type: "error",
       });
       return;
-  }
-    if (tableName.trim() && selectedItems.length > 0) {
-      const areaId = Number(selectedItems[0]);
-      onSave(table?.id ?? 0, areaId, tableName.trim());
+    }
+
+    if (tableName.trim() && selectedItems) {
+      onSave(table?.id ?? 0, selectedItems, tableName.trim());
       setTableName('');
-      setSelectedItems([]);
+      setSelectedItems('');
     }
   };
 
-  const onSelectedItemsChange = (selectedItems: string[]) => {
-    console.log('Selected Items:', selectedItems); 
-    setSelectedItems(selectedItems);
+  const onSelectedItemsChange = (value: any) => {
+    console.log('Selected Items:', value);
+    setSelectedItems(value);
   };
-
   return (
     <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
       <View style={styles.modalOverlay}>
@@ -83,25 +70,24 @@ const TableModal: React.FC<TableModalProps> = ({ visible, onClose, onSave, table
           <Text style={styles.modalTitle}>{isEditing ? 'Sửa bàn' : 'Thêm bàn mới'}</Text>
 
           <View style={styles.multiSelectContainer}>
-            <MultiSelect
-              items={formattedAreaList}
-              uniqueKey="id" 
-              onSelectedItemsChange={onSelectedItemsChange}
-              selectedItems={selectedItems}
-              selectText="Chọn khu vực"
-              tagRemoveIconColor="#CCC"
-              tagBorderColor="#CCC"
-              tagTextColor="#333"
-              selectedItemTextColor="#333"
-              selectedItemIconColor="#333…"
-              itemTextColor="#000"
-              displayKey="name" 
-              searchInputStyle={styles.searchInputStyle}
-              submitButtonColor="black"
-              submitButtonText="Xác nhận"
-              styleMainWrapper={styles.multiSelectMainWrapper}
-              styleDropdownMenuSubsection={styles.multiSelectDropdown}
-              single={true} 
+            <Dropdown
+              data={areaList}
+              style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              inputSearchStyle={styles.inputSearchStyle}
+              iconStyle={styles.iconStyle}
+              maxHeight={300}
+              labelField="areaName"
+              valueField="id"
+              placeholder={!isFocus ? 'Chọn khu vực' : ''}
+              value={selectedItems}
+              onFocus={() => setIsFocus(true)}
+              onBlur={() => setIsFocus(false)}
+              onChange={item => {
+                onSelectedItemsChange(item.id);
+                setIsFocus(false);
+              }}
             />
           </View>
           <TextInput
@@ -169,7 +155,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 6,
     paddingLeft: 10,
-    
+
   },
   searchInputStyle: {
     color: '#333',
@@ -203,6 +189,47 @@ const styles = StyleSheet.create({
   saveButtonText: {
     color: 'white',
     fontWeight: '500',
+  },
+
+
+
+  // 
+  container: {
+    backgroundColor: 'white',
+    padding: 16,
+  },
+  dropdown: {
+    height: 50,
+    borderColor: 'gray',
+    borderWidth: 0.5,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+  },
+  icon: {
+    marginRight: 5,
+  },
+  label: {
+    position: 'absolute',
+    backgroundColor: 'white',
+    left: 22,
+    top: 8,
+    zIndex: 999,
+    paddingHorizontal: 8,
+    fontSize: 14,
+  },
+  placeholderStyle: {
+    fontSize: 16,
+  },
+  selectedTextStyle: {
+    fontSize: 16,
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
   },
 });
 

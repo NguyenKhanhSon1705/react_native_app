@@ -17,23 +17,23 @@ const TableOptionsModal: React.FC<TableOptionsModalProps> = ({
   position
 }) => {
   return (
-    <Modal 
-      animationType="fade" 
-      transparent={true} 
-      visible={visible} 
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={visible}
       onRequestClose={onClose}
     >
-      <TouchableOpacity 
-        style={styles.modalOverlay} 
-        activeOpacity={1} 
+      <TouchableOpacity
+        style={styles.modalOverlay}
+        activeOpacity={1}
         onPress={onClose}
       >
-        <View 
+        <View
           style={[
-            styles.modalContainer, 
-            { 
-              top: position.top, 
-              left: position.left - 100 
+            styles.modalContainer,
+            {
+              top: position.top,
+              left: position.left - 100
             }
           ]}
         >
@@ -50,19 +50,19 @@ const TableOptionsModal: React.FC<TableOptionsModalProps> = ({
 };
 
 const styles = StyleSheet.create({
-  modalOverlay: { 
-    flex: 1, 
-    position: 'absolute', 
-    top: 0, 
-    left: 0, 
-    right: 0, 
-    bottom: 0 
+  modalOverlay: {
+    flex: 1,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0
   },
-  modalContainer: { 
-    position: 'absolute', 
-    width: 120, 
-    backgroundColor: 'white', 
-    borderRadius: 8, 
+  modalContainer: {
+    position: 'absolute',
+    width: 120,
+    backgroundColor: 'white',
+    borderRadius: 8,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -70,16 +70,16 @@ const styles = StyleSheet.create({
     elevation: 3,
     paddingVertical: 8,
   },
-  modalOption: { 
-    paddingVertical: 10, 
-    paddingHorizontal: 15, 
-    borderBottomWidth: 1, 
-    borderBottomColor: '#f0f0f0' 
+  modalOption: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0'
   },
-  modalOptionText: { 
-    fontSize: 14, 
-    color: '#333', 
-    textAlign: 'left' 
+  modalOptionText: {
+    fontSize: 14,
+    color: '#333',
+    textAlign: 'left'
   },
 });
 

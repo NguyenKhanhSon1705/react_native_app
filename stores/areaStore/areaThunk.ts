@@ -2,16 +2,21 @@ import { IAppResposeBase } from "@/interfaces/appType";
 import httpRequest from "@/utils/axios/axiosCustom";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AreaData,addAreaData,editAreaData } from "@/interfaces/area/AreaTypes";
-
+import cookiesIdShop from "@/utils/functions/cookieIdShop";
 
 const getAreaData = createAsyncThunk(
     "area/getAreaData",
-    async (shopId: number, { rejectWithValue }): Promise<IAppResposeBase<AreaData[]>> => {
+    async (_, { rejectWithValue }): Promise<IAppResposeBase<AreaData[]>> => {
         try {
-            const response = await httpRequest.get<IAppResposeBase<AreaData[]>>(`/api/areas/get-list-areas?idShop=${shopId}`);
+            const shopId = await cookiesIdShop.getCookieIdShop();
+            console.log("shoID",shopId);
+            const response = await httpRequest.get<IAppResposeBase<AreaData[]>>(`/api/areas/get-list-areas` , {
+                params: {
+                    idShop: shopId
+                }
+            });
             return response.data;
         } catch (error: any) {
-            console.error("API Error:", error);
             return rejectWithValue(error.data) as any;
         }
     }
@@ -21,13 +26,14 @@ const addArea = createAsyncThunk(
     "area/addArea",
     async (newArea: addAreaData, { rejectWithValue }) => {
         try {
+            const shopId = await cookiesIdShop.getCookieIdShop();
+            newArea.idShop = shopId ?? 0;
             const response = await httpRequest.post<IAppResposeBase<AreaData>>(
                 "/api/areas/create-area",
                 newArea
             );
             return response.data;
         } catch (error: any) {
-            console.error("API Error:", error);
             return rejectWithValue(error.data) as any;
         }
     }
@@ -37,13 +43,14 @@ const updateArea = createAsyncThunk(
     "area/updateArea",
     async (areaData: editAreaData, { rejectWithValue }) => {
         try {
+            const shopId = await cookiesIdShop.getCookieIdShop();
+            areaData.idShop = shopId ?? 0;
             const response = await httpRequest.put<IAppResposeBase<AreaData>>(
                 "/api/areas/update-area",
                 areaData
             );
             return response.data;
         } catch (error: any) {
-            console.error("API Error:", error);
             return rejectWithValue(error.data) as any;
         }
     }
