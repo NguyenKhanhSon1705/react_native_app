@@ -54,6 +54,7 @@ const FormLogin: React.FC = () => {
                 text2: result.data.message,
                 type: "success",
             });
+            
             await accessToken.setAccessToken(result.data.data.accessToken)
             router.push(routes_path.CHOOSESHOP)
             setLoading(false);

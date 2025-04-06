@@ -1,24 +1,17 @@
 import { IAppResposeBase } from "@/interfaces/appType";
+import { IShopData } from "@/interfaces/shop/shopDTO";
 import httpRequest from "@/utils/axios/axiosCustom";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 
-interface ListShop {
-    id: string;
-    shopName: string;
-    shopPhone: string;
-    logoShop: string;
-    shopAddress: string;
-    isActive: boolean;
-}
-
 const getListShopUser = createAsyncThunk(
     "shop/getListShopUser",
-    async (_, { rejectWithValue }): Promise<IAppResposeBase<ListShop>> => {
+    async (_, { rejectWithValue }): Promise<IAppResposeBase<IShopData[]>> => {
         try {
-            const listShop: IAppResposeBase<ListShop> = await httpRequest.get("/api/shop/get-list-shop");
-            return listShop;
+            const listShop = await httpRequest.get<IAppResposeBase<IShopData[]> >("/api/shop/get-list-shop");
+            return listShop.data;
         } catch (error: any) {
+            console.error("API Error:", error);
             return rejectWithValue(error.data) as any;
         }
     })
