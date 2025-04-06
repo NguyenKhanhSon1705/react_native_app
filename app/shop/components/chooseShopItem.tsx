@@ -1,7 +1,8 @@
 import images from "@/assets/images";
+import { IShopData } from "@/interfaces/shop/shopDTO";
 import { FC } from "react";
 import { Image, Text, View } from "react-native";
-import { Avatar } from "react-native-paper";
+import {  Button } from "react-native-paper";
 import styled from "styled-components";
 const Container = styled(View)`
     padding: 10px ;
@@ -55,20 +56,24 @@ const Star = styled(Text)`
     margin-right: 4px;
 `;
 
+interface IPropsItem {
+    propsItem:IShopData,
+    onPressIdShop: (id:any)=> any
+}
 
-const ChooseShopItem: FC = () => {
+const ChooseShopItem: FC<IPropsItem> = ({propsItem , onPressIdShop}) => {
     return (
         <Container>
             <ContainerAvt>
                 <AvatarContainer>
                     <Image
-                        source={images.kfc }
+                         source={{ uri: propsItem.logoShop }}
                         style={{ width: 100, height: 100, borderRadius: 5 }} // Không bo tròn
                     />
                 </AvatarContainer>
                 <ContainerInfo>
                     <InfoHeader>
-                        <Text style={{ fontWeight: "bold", fontSize: 16 }}>Chicken Thai Biriyani</Text>
+                        <Text style={{ fontWeight: "bold", fontSize: 16 }}>{propsItem.shopName}</Text>
                         <Text style={{ fontSize: 18, fontWeight: "bold" }}>...</Text>
                     </InfoHeader>
                     <InfoHeader>
@@ -80,7 +85,13 @@ const ChooseShopItem: FC = () => {
                             <Star>⭐ 4.9</Star>
                             <Text style={{ color: "#888" }}>(10 Review)</Text>
                         </Rating>
-                        <Text style={{ color: "#888" }}>Pick Up</Text>
+                        <Button
+                        buttonColor=""
+                        style={{
+                            borderColor:"red"
+                        }}
+                        onPress={()=>onPressIdShop(propsItem.id)}
+                        >Đi tới </Button>
                     </InfoHeader>
                 </ContainerInfo>
             </ContainerAvt>
