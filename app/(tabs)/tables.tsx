@@ -6,8 +6,8 @@ import { RootState, AppDispatch } from "@/stores";
 
 import { ITableData , ITableRequest} from "@/interfaces/table.ts/TableTypes";
 import tableAction from "@/stores/tableStore/tableThunk";
-import TableModal from "./components/editTableModal";
-import TableOptionsModal from "./components/tableOptionModal";
+import TableModal from "../../components/tables/components/editTableModal";
+import TableOptionsModal from "../../components/tables/components/tableOptionModal";
 
 
 const TableScreen = () => {
@@ -101,7 +101,7 @@ const TableScreen = () => {
       {/* Grid hiển thị bàn */}
       <ScrollView
         contentContainerStyle={styles.gridContainer}
-        showsVerticalScrollIndicator={false}
+        // showsVerticalScrollIndicator={false}
       >
         {tableList.map((table: ITableData) => (
           <View key={table.id} style={styles.areaCard}>
@@ -110,9 +110,12 @@ const TableScreen = () => {
               style={styles.areaImage}
             />
           <View style={styles.areaDetails}>
-            <View style={styles.areaTextContainer}>
-              <Text style={styles.areaName}>{table.areaName}</Text>
-              <Text style={[styles.areaName, { color: "#999" }]}>{table.nameTable}</Text>
+            <View style={[styles.areaTextContainer, {flexDirection:"row"} ]}>
+              <Text numberOfLines={1} ellipsizeMode="tail">
+                  <Text style={[styles.areaName, { color: "#999" }]}>{table.areaName} - </Text>
+              <Text style={styles.areaName}>{table.nameTable}</Text>
+              </Text>
+            
             </View>
             <TouchableOpacity style={styles.optionsButton} onPress={(event) => openOptionsModal(table, event)}>
               <Text style={styles.optionsButtonText}>•••</Text>
@@ -147,8 +150,8 @@ export default TableScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F5F5F5",
     paddingHorizontal: 15,
+    
   },
   headerContainer: {
     flexDirection: "row",
@@ -175,9 +178,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
+    paddingBottom: 50
   },
   areaCard: {
-    width: "31%",
+    width: "48%",
     backgroundColor: "white",
     borderRadius: 10,
     marginBottom: 15,
@@ -185,11 +189,11 @@ const styles = StyleSheet.create({
   },
 
   areaImage: {
-    width: "100%",
-    height: 90,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
+    width: "50%",
+    height: 50,
     resizeMode: "cover",
+    alignSelf: "center",
+    marginTop: 10,
   },
   areaDetails: {
     padding: 10,

@@ -8,7 +8,7 @@ const Container = styled(View)`
     bottom: 0;
     flex-direction: row;
     background-color: #fff;
-    padding: 24px 0;
+    padding: 30px 0;
     border-top-right-radius: 30px;
     border-top-left-radius: 30px;
 `;

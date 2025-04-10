@@ -1,24 +1,23 @@
-
 import TabBar from "@/components/tabs/Tabbar";
+import Routes from "@/routes/route_tabs";
 import { Tabs } from "expo-router";
 const _LayoutTabs = () => {
     return (
         <Tabs
             tabBar={(props) => <TabBar {...props} />}
+            screenOptions={{ headerShown: false }}
         >
-            <Tabs.Screen
-                name="test"
-                options={{
-                    title: "grid-view",
-                }}
-            />
-
-            {/* <Tabs.Screen
-                name="tables"
-                options={{
-                    title: "menu",
-                }}
-            /> */}
+            {
+                Routes.map(route => (
+                    <Tabs.Screen
+                        key={route.name}
+                        name={route.name}
+                        options={{
+                            title: route.icon,
+                        }}
+                    />
+                ))
+            }
         </Tabs>
     );
 };
