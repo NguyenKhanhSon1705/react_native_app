@@ -9,7 +9,8 @@ const StartApp = () => {
     const router = useRouter()
     const textConfig = useTranslate();
     const nextPage = () => {
-        router.push(routes_path.LOGIN)
+        // router.push(routes_path.LOGIN)
+        router.push("(tabs)")
     }
     
     return (

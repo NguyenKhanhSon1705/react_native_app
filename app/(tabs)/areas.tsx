@@ -4,8 +4,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/stores";
 import areaAction from "@/stores/areaStore/areaThunk";
-import AreaOptionsModal from "./components/areaOptionModal";
-import AreaModal from "./components/editAreaModal";
+import AreaOptionsModal from "../../components/areas/components/areaOptionModal";
+import AreaModal from "../../components/areas/components/editAreaModal";
 import { addAreaData,editAreaData,AreaData } from "@/interfaces/area/AreaTypes";
 
 
