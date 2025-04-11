@@ -1,11 +1,11 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { Pressable, PressableProps, Text } from "react-native";
 
-interface ITabBarBottonProps extends PressableProps{
+interface ITabBarBottonProps extends PressableProps {
     label: string,
     routename: string,
     color: string,
-    icon?: any 
+    icon?: any
 }
 
 const TabbarBottonEven: React.FC<ITabBarBottonProps> = ({
@@ -16,15 +16,16 @@ const TabbarBottonEven: React.FC<ITabBarBottonProps> = ({
     ...props
 }) => {
     return (
-        <Pressable 
-        {...props}
-        style={{
-            flex: 1,
-            justifyContent:"center",
-            alignItems:"center",
-        }}
+        <Pressable
+            {...props}
+            style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+                marginBottom: 20,
+            }}
         >
-             <MaterialIcons name={icon ?? "grid-view"} size={26} color={color}/> 
+            <MaterialIcons name={icon ?? "grid-view"} size={26} color={color} />
         </Pressable>
     )
 }
