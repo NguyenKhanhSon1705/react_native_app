@@ -32,9 +32,8 @@ const ChooseShop: FC = () => {
     }, [])
 
     const handleGotoShop = async (id: any) => {
-        console.log(id)
         await cookiesIdShop.setCookieIdShop(id);
-        router.push(routes_path.AREAR)
+        router.push("(tabs)")
     }
     return (
         <Container>

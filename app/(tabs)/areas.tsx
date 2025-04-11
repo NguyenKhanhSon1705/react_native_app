@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, ScrollView, TouchableOpacity, StyleSheet,Alert } from "react-native";
+import { View, Text, Image, ScrollView, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/stores";
 import areaAction from "@/stores/areaStore/areaThunk";
 import AreaOptionsModal from "../../components/areas/components/areaOptionModal";
 import AreaModal from "../../components/areas/components/editAreaModal";
-import { addAreaData,editAreaData,AreaData } from "@/interfaces/area/AreaTypes";
+import { addAreaData, editAreaData, AreaData } from "@/interfaces/area/AreaTypes";
 
 
 const AreaScreen = () => {
@@ -15,12 +15,12 @@ const AreaScreen = () => {
   const [isOptionsModalVisible, setIsOptionsModalVisible] = useState(false);
   const [isAreaModalVisible, setIsAreaModalVisible] = useState(false);
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
+  const areaList = useSelector((state: RootState) => state.areaStore.areas);
 
   useEffect(() => {
     dispatch(areaAction.getAreaData());
   }, [dispatch]);
 
-  const areaList = useSelector((state: RootState) => state.areaStore.areas);
 
   const openOptionsModal = (area: AreaData, event: any) => {
     const { pageX, pageY } = event.nativeEvent;
@@ -70,13 +70,13 @@ const AreaScreen = () => {
 
   const handleSaveArea = (areaName: string, areaId?: number) => {
     if (areaId) {
-       dispatch(areaAction.updateArea(
-        { id: areaId, areaName} as editAreaData
-       ));
+      dispatch(areaAction.updateArea(
+        { id: areaId, areaName } as editAreaData
+      ));
     } else {
-       dispatch(areaAction.addArea(
+      dispatch(areaAction.addArea(
         { areaName } as addAreaData
-       ));
+      ));
     }
     closeAreaModal();
   };
