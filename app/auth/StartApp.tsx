@@ -4,25 +4,13 @@ import { useNavigation, useRootNavigationState, useRouter } from "expo-router";
 import logo from '../../assets/logo1.png';
 import routes_path from "@/routes/routes_path";
 import { useTranslate } from "@/utils/hooks/useTranslate";
-import accessToken from "@/utils/functions/accessToken";
-import { useEffect } from "react";
 const StartApp = () => {
     const router = useRouter()
     const textConfig = useTranslate();
-    const rootNavigation = useRootNavigationState();
-    console.log();
-
-    useEffect(() => {
-        if (!rootNavigation?.key) return; // Chưa sẵn sàng
-
-        if (accessToken.getAccessToken()) {
-            router.push("(tabs)");
-        }
-    }, [rootNavigation]);
+   
     const nextPage = () => {
         router.push(routes_path.LOGIN)
     }
-
     return (
         <View style={style.container}>
             <Avatar.Image

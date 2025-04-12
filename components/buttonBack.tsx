@@ -7,13 +7,11 @@ const ContainerButtonBack = styled(TouchableOpacity)`
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     margin: 12px;
     text-align: center;
-    background-color: #ecf0f4;
     border-radius: 50%;
-    color: white;
 `
 
  interface ButtonBackProps {

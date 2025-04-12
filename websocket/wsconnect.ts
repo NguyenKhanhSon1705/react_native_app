@@ -2,7 +2,6 @@ import env from "@/constant/envConstant";
 import accessToken from "@/utils/functions/accessToken";
 import * as signalR from "@microsoft/signalr";
 const WsConnect = (areaId: string | number) => {
-    console.log(env.API_URL + "/" + areaId);
     const connection = new signalR.HubConnectionBuilder()
         .withUrl(`${env.API_URL}/ordertablearea?areaId=${areaId}`, // thay bằng URL thực tế
             {
@@ -11,7 +10,7 @@ const WsConnect = (areaId: string | number) => {
                     return token || "";
                 },
             }) // thay bằng URL thực tế
-        .withAutomaticReconnect()
+        .withAutomaticReconnect([0, 2000, 10000, 30000])
         .configureLogging(signalR.LogLevel.Information)
         .build();
 
