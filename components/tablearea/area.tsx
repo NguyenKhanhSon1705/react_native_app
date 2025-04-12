@@ -7,11 +7,11 @@ import {
     Animated,
     Easing,
 } from 'react-native';
-import { Drawer, Surface } from 'react-native-paper';
+import { Button, Drawer, Surface } from 'react-native-paper';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { AppDispatch, RootState } from '@/stores';
 import areaAction from '@/stores/areaStore/areaThunk';
-
+import { useTableAreaWebsocket } from '@/websocket/wstablearea';
 const screenWidth = Dimensions.get('window').width;
 const drawerWidth = screenWidth * 0.7;
 
@@ -24,7 +24,8 @@ type Props = {
 const Area = ({ visible, onClose, onSelectArea }: Props) => {
     const slideAnim = useRef(new Animated.Value(-drawerWidth)).current;
     const dispatch = useDispatch<AppDispatch>();
-    const hasAutoSelected = useRef(false); // Đánh dấu đã auto chọn chưa
+    const [activeArea, setActiveArea] = useState<{ areaId?: number; areaName?: string }>({});
+    useTableAreaWebsocket(activeArea.areaId);
 
     const areaList = useSelector(
         (state: RootState) => state.areaStore.areas,
@@ -38,19 +39,15 @@ const Area = ({ visible, onClose, onSelectArea }: Props) => {
     }, [dispatch]);
 
     // Auto chọn phần tử đầu tiên
+ 
     useEffect(() => {
-        // if (visible && areaList.length > 0 && !hasAutoSelected.current) {
-        //     const firstArea = areaList[0];
-        //     if (onSelectArea) {
-        //         onSelectArea(firstArea.id, firstArea.areaName);
-        //         hasAutoSelected.current = true;
-        //     }
-        // }
-
-        if (!visible) {
-            hasAutoSelected.current = false; // reset lại khi đóng
+        if (areaList.length > 0) {
+            if (onSelectArea) {
+                onSelectArea(areaList[0].id, areaList[0].areaName);
+                setActiveArea({ areaId: areaList[0].id, areaName: areaList[0].areaName });
+            }
         }
-    }, [visible]);
+    }, [areaList]);
 
     useEffect(() => {
         if (visible) {
@@ -113,13 +110,24 @@ const Area = ({ visible, onClose, onSelectArea }: Props) => {
                 ]}
             >
                 <Surface style={styles.drawerSurface}>
-                    <Drawer.Section title="Danh sách khu vực" showDivider={false}>
+                    <Drawer.Section
+                    title="Danh sách khu vực" showDivider={false}>
                         {areaList.map((area) => (
-                            <Drawer.Item
+                            <Button
                                 key={area.id}
-                                label={area.areaName}
-                                onPress={() => handleSelectArea(area.id, area.areaName)}
-                            />
+                                mode='outlined'
+                                style={{
+                                    borderRadius: 5,
+                                    marginVertical: 4,
+                                    borderColor: '#ccc',
+                                }}
+                                textColor='#000'
+                                // label={area.areaName}
+                                onPress={() => {
+                                    setActiveArea({ areaId: area.id, areaName: area.areaName });
+                                    handleSelectArea(area.id, area.areaName);
+                                }}
+                            >{area.areaName}</Button>
                         ))}
                     </Drawer.Section>
                 </Surface>

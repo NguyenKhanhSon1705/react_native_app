@@ -8,6 +8,6 @@ export const getCookie = (cookieName : string) : string | undefined =>{
 export const setCookie = (cookieName : string, cookieValue : string,) : void=> {
      SecureStore.setItem(cookieName , cookieValue)
 }
-export const removeCookie =  (cookieName : string) : void => {
-      SecureStore.deleteItemAsync(cookieName)
+export const removeCookie = async (cookieName : string) : Promise<void> => {
+      await SecureStore.deleteItemAsync(cookieName)
 }

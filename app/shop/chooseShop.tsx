@@ -10,9 +10,9 @@ import { AppDispatch, RootState } from "@/stores";
 import { IShopData } from "@/interfaces/shop/shopDTO";
 import cookiesIdShop from "@/utils/functions/cookieIdShop";
 import routes_path from "@/routes/routes_path";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-const Container = styled(View)`
-    /* margin-top: 20px; */
+const Container = styled(SafeAreaView)`
     background-color: #fff;
 `
 const ContainerHeader = styled(View)`
@@ -33,8 +33,11 @@ const ChooseShop: FC = () => {
 
     const handleGotoShop = async (id: any) => {
         await cookiesIdShop.setCookieIdShop(id);
-        router.push("(tabs)")
+        router.push(routes_path.TABLEAREA)
     }
+
+    // todo feature add update shop
+
     return (
         <Container>
             <ContainerHeader>
@@ -43,20 +46,22 @@ const ChooseShop: FC = () => {
                     size={36}
                     color="#272b3b"
                     onPress={() => router.back()} />
-                <ButtonBack
+                {/* <ButtonBack
                     iconName="plus"
                     size={36}
                     color="#272b3b"
-                />
+                /> */}
             </ContainerHeader>
             {
-                shopData.map((item: IShopData) => (
-                    <ChooseShopItem
+                shopData.map((item: IShopData) => {
+                    return (
+                        <ChooseShopItem
                         key={item.id}
                         propsItem={item}
                         onPressIdShop={handleGotoShop}
                     />
-                ))
+                    )
+                })
             }
         </Container>
     );

@@ -1,13 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, ScrollView, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/stores";
 import areaAction from "@/stores/areaStore/areaThunk";
 import AreaOptionsModal from "../../components/areas/components/areaOptionModal";
 import AreaModal from "../../components/areas/components/editAreaModal";
-import { addAreaData, editAreaData, AreaData } from "@/interfaces/area/AreaTypes";
-
+import {
+  addAreaData,
+  editAreaData,
+  AreaData,
+} from "@/interfaces/area/AreaTypes";
 
 const AreaScreen = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -20,7 +31,6 @@ const AreaScreen = () => {
   useEffect(() => {
     dispatch(areaAction.getAreaData());
   }, [dispatch]);
-
 
   const openOptionsModal = (area: AreaData, event: any) => {
     const { pageX, pageY } = event.nativeEvent;
@@ -46,10 +56,7 @@ const AreaScreen = () => {
         "Xóa khu vực",
         `Bạn có chắc chắn muốn xóa ${selectedArea.areaName}?`,
         [
-          {
-            text: "Hủy",
-            style: "cancel",
-          },
+          { text: "Hủy", style: "cancel" },
           {
             text: "Xóa",
             onPress: () => {
@@ -70,13 +77,11 @@ const AreaScreen = () => {
 
   const handleSaveArea = (areaName: string, areaId?: number) => {
     if (areaId) {
-      dispatch(areaAction.updateArea(
-        { id: areaId, areaName } as editAreaData
-      ));
+      dispatch(
+        areaAction.updateArea({ id: areaId, areaName } as editAreaData)
+      );
     } else {
-      dispatch(areaAction.addArea(
-        { areaName } as addAreaData
-      ));
+      dispatch(areaAction.addArea({ areaName } as addAreaData));
     }
     closeAreaModal();
   };
@@ -93,13 +98,23 @@ const AreaScreen = () => {
           <Text style={styles.addButtonText}>Thêm mới</Text>
         </TouchableOpacity>
       </View>
-      <ScrollView contentContainerStyle={styles.gridContainer} showsVerticalScrollIndicator={false}>
+
+      <ScrollView
+        contentContainerStyle={styles.gridContainer}
+        showsVerticalScrollIndicator={false}
+      >
         {areaList.map((area: AreaData) => (
           <View key={area.id} style={styles.areaCard}>
-            <Image source={require("@/assets/house.png")} style={styles.areaImage} />
+            <Image
+              source={require("@/assets/house.png")}
+              style={styles.areaImage}
+            />
             <View style={styles.areaDetails}>
               <Text style={styles.areaName}>{area.areaName}</Text>
-              <TouchableOpacity style={styles.optionsButton} onPress={(event) => openOptionsModal(area, event)}>
+              <TouchableOpacity
+                style={styles.optionsButton}
+                onPress={(event) => openOptionsModal(area, event)}
+              >
                 <Text style={styles.optionsButtonText}>•••</Text>
               </TouchableOpacity>
             </View>
@@ -128,29 +143,31 @@ const AreaScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F5F5F5",
-    paddingHorizontal: 15,
+    backgroundColor: "#F9FAFB",
+    paddingHorizontal: 20,
+    paddingTop: 10,
   },
   headerContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginVertical: 15,
+    marginBottom: 20,
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
+    fontSize: 22,
+    fontWeight: "600",
+    color: "#111827",
   },
   addButton: {
-    backgroundColor: "black",
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    borderRadius: 5,
+    backgroundColor: "#111827",
+    paddingVertical: 10,
+    paddingHorizontal: 18,
+    borderRadius: 12,
   },
   addButtonText: {
-    color: "white",
-    fontSize: 14,
-    fontWeight: "bold",
+    color: "#ffffff",
+    fontSize: 15,
+    fontWeight: "600",
   },
   gridContainer: {
     flexDirection: "row",
@@ -159,34 +176,42 @@ const styles = StyleSheet.create({
   },
   areaCard: {
     width: "48%",
-    backgroundColor: "white",
-    borderRadius: 10,
-    marginBottom: 15,
+    backgroundColor: "#ffffff",
+    borderRadius: 16,
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
     elevation: 3,
   },
   areaImage: {
     width: "100%",
-    height: 150,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
+    height: 130,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
     resizeMode: "cover",
   },
   areaDetails: {
-    padding: 10,
+    padding: 12,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
   areaName: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: "600",
+    color: "#111827",
+    flexShrink: 1,
   },
   optionsButton: {
-    padding: 5,
+    padding: 6,
+    backgroundColor: "#F3F4F6",
+    borderRadius: 8,
   },
   optionsButtonText: {
-    fontSize: 16,
-    color: "#666",
+    fontSize: 18,
+    color: "#6B7280",
   },
 });
 

@@ -1,8 +1,8 @@
-import images from "@/assets/images";
+
 import { IShopData } from "@/interfaces/shop/shopDTO";
 import { FC } from "react";
 import { Image, Text, View } from "react-native";
-import {  Button } from "react-native-paper";
+import {  Avatar, Button } from "react-native-paper";
 import styled from "styled-components";
 const Container = styled(View)`
     padding: 10px ;
@@ -66,8 +66,9 @@ const ChooseShopItem: FC<IPropsItem> = ({propsItem , onPressIdShop}) => {
         <Container>
             <ContainerAvt>
                 <AvatarContainer>
+                    {/* <Avatar.Image size={80} source={{ uri: propsItem.shopLogo }} /> */}
                     <Image
-                         source={{ uri: propsItem.logoShop }}
+                         source={{ uri: propsItem.shopLogo }}
                         style={{ width: 100, height: 100, borderRadius: 5 }} // Không bo tròn
                     />
                 </AvatarContainer>

@@ -66,11 +66,10 @@ const TabBar: React.FC<any> = ({ state, descriptors, navigation }) => {
             })}
 
             {/* Indicator dưới tab */}
-
             <Animated.View
                 style={{
                     position: "absolute",
-                    top: 0, // nếu bạn muốn hiển thị trên icon, còn nếu dưới thì dùng `bottom: 0`
+                    top: 0,
                     left: 0,
                     height: 3,
                     width: indicatorWidth,

@@ -4,11 +4,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/stores";
 
-import { ITableData , ITableRequest} from "@/interfaces/table.ts/TableTypes";
+import { ITableData , ITableRequest } from "@/interfaces/table.ts/TableTypes";
 import tableAction from "@/stores/tableStore/tableThunk";
 import TableModal from "../../components/tables/components/editTableModal";
 import TableOptionsModal from "../../components/tables/components/tableOptionModal";
-
 
 const TableScreen = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -16,12 +15,20 @@ const TableScreen = () => {
   const [isOptionsModalVisible, setIsOptionsModalVisible] = useState(false);
   const [isTableModalVisible, setIsTableModalVisible] = useState(false);
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
+  const [highlightedTableId, setHighlightedTableId] = useState<number | null>(null);
+
+  const tableList = useSelector((state: RootState) => state.tableStore.tables);
 
   useEffect(() => {
     dispatch(tableAction.getTableData());
   }, [dispatch]);
 
-  const tableList = useSelector((state: RootState) => state.tableStore.tables);
+  useEffect(() => {
+    if (highlightedTableId !== null) {
+      const timeout = setTimeout(() => setHighlightedTableId(null), 3000); // 3s
+      return () => clearTimeout(timeout);
+    }
+  }, [highlightedTableId]);
 
   const openOptionsModal = (table: ITableData, event: any) => {
     const { pageX, pageY } = event.nativeEvent;
@@ -36,23 +43,18 @@ const TableScreen = () => {
 
   const handleEdit = () => {
     if (selectedTable) {
-      console.log("Editing area:", selectedTable);
       closeOptionsModal();
       setIsTableModalVisible(true);
     }
   };
 
   const handleDelete = () => {
-    console.log(selectedTable);
     if (selectedTable) {
       Alert.alert(
         "Xóa khu vực",
         `Bạn có chắc chắn muốn xóa ${selectedTable.nameTable}?`,
         [
-          {
-            text: "Hủy",
-            style: "cancel",
-          },
+          { text: "Hủy", style: "cancel" },
           {
             text: "Xóa",
             onPress: () => {
@@ -66,15 +68,17 @@ const TableScreen = () => {
     closeOptionsModal();
   };
 
-  const handleSaveTable = (tableId: number,areaId:number,nameTable: string) => {
+  const handleSaveTable = (tableId: number, areaId: number, nameTable: string) => {
     if (tableId) {
       dispatch(
-        tableAction.updateTable({ id: tableId,areaId,nameTable } as ITableRequest)
+        tableAction.updateTable({ id: tableId, areaId, nameTable } as ITableRequest)
       );
+      setHighlightedTableId(tableId); // Đánh dấu bàn vừa được cập nhật
     } else {
       dispatch(
-        tableAction.addTable({areaId,nameTable } as ITableRequest)
+        tableAction.addTable({ areaId, nameTable } as ITableRequest)
       );
+      // Giả sử backend trả về ID mới, có thể set lại highlighted sau khi nhận WebSocket
     }
     closeTableModal();
   };
@@ -83,14 +87,13 @@ const TableScreen = () => {
     setSelectedTable(null);
     setIsTableModalVisible(true);
   };
-  
+
   const closeTableModal = () => {
     setIsTableModalVisible(false);
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
       <View style={styles.headerContainer}>
         <Text style={styles.sectionTitle}>Danh sách bàn</Text>
         <TouchableOpacity style={styles.addButton} onPress={handleAddNew}>
@@ -98,34 +101,29 @@ const TableScreen = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Grid hiển thị bàn */}
-      <ScrollView
-        contentContainerStyle={styles.gridContainer}
-        // showsVerticalScrollIndicator={false}
-      >
+      <ScrollView contentContainerStyle={styles.gridContainer}>
         {tableList.map((table: ITableData) => (
           <View key={table.id} style={styles.areaCard}>
-            <Image
-              source={require("@/assets/table.png")}
-              style={styles.areaImage}
-            />
-          <View style={styles.areaDetails}>
-            <View style={[styles.areaTextContainer, {flexDirection:"row"} ]}>
-              <Text numberOfLines={1} ellipsizeMode="tail">
+            <Image source={require("@/assets/table.png")} style={styles.areaImage} />
+            <View style={styles.areaDetails}>
+              <View style={styles.areaTextContainer}>
+                <Text numberOfLines={1} ellipsizeMode="tail">
                   <Text style={[styles.areaName, { color: "#999" }]}>{table.areaName} - </Text>
-              <Text style={styles.areaName}>{table.nameTable}</Text>
-              </Text>
-            
+                  <Text style={styles.areaName}>{table.nameTable}</Text>
+                </Text>
+              </View>
+
+              <TouchableOpacity
+                style={styles.optionsButton}
+                onPress={(event) => openOptionsModal(table, event)}
+              >
+                <Text style={styles.optionsButtonText}>•••</Text>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity style={styles.optionsButton} onPress={(event) => openOptionsModal(table, event)}>
-              <Text style={styles.optionsButtonText}>•••</Text>
-            </TouchableOpacity>
-          </View>
           </View>
         ))}
       </ScrollView>
 
-      {/* Modal tuỳ chọn */}
       <TableOptionsModal
         visible={isOptionsModalVisible}
         onClose={closeOptionsModal}
@@ -134,7 +132,6 @@ const TableScreen = () => {
         position={modalPosition}
       />
 
-      {/* Modal thêm/sửa bàn */}
       <TableModal
         visible={isTableModalVisible}
         onClose={closeTableModal}

@@ -7,8 +7,8 @@ const getAccessToken = (): string | undefined => {
 const setAccessToken = (token: string): void => {
     setCookie(env.ACCESS_TOKEN, token);
 }
-const deleteAccessToken = (): void => {
-    removeCookie(env.ACCESS_TOKEN);
+const deleteAccessToken = async (): Promise<void> => {
+    await removeCookie(env.ACCESS_TOKEN);
 }
 
 const accessToken = {
