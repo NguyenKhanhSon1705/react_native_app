@@ -10,7 +10,7 @@ const WsConnect = (areaId: string | number) => {
                     return token || "";
                 },
             }) // thay bằng URL thực tế
-        .withAutomaticReconnect([0, 2000, 10000, 30000])
+        .withAutomaticReconnect()
         .configureLogging(signalR.LogLevel.Information)
         .build();
 

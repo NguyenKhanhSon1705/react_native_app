@@ -23,7 +23,6 @@ export const useTableAreaWebsocket = (areaId?: string | number) => {
             try {
                 await connection.start();
                 isStartedRef.current = true; 
-                console.log("SignalR connected");
 
                 connection.on("TableUpdated", (updatedData: ITableAreaData[]) => {
                     dispatch(updateTablesArea(updatedData));
@@ -37,7 +36,7 @@ export const useTableAreaWebsocket = (areaId?: string | number) => {
                     });
                 });
             } catch (err) {
-                console.error("SignalR connection error:", err);
+                // console.error("SignalR connection error:", err);
                 Toast.show({
                     type: "error",
                     text1: "Lỗi kết nối",
@@ -55,8 +54,6 @@ export const useTableAreaWebsocket = (areaId?: string | number) => {
             const conn = connectionRef.current;
             if (conn) {
                 conn.off("TableUpdated");
-
-                // ✅ Chỉ stop nếu đã start
                 if (isStartedRef.current) {
                     conn.stop()
                         .then(() => console.log("SignalR connection stopped"))

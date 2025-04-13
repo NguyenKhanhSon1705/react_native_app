@@ -24,7 +24,7 @@
         "backgroundColor": "#ffffff"
       }
     },
-    "android": {
+    "android": { "package": "{your_android_package_name}",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "white"

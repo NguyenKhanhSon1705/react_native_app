@@ -19,6 +19,7 @@ import {
   editAreaData,
   AreaData,
 } from "@/interfaces/area/AreaTypes";
+import { transparent } from "react-native-paper/lib/typescript/styles/themes/v2/colors";
 
 const AreaScreen = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -154,20 +155,23 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   sectionTitle: {
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: "600",
-    color: "#111827",
+    color: "#ff8c47",
   },
   addButton: {
-    backgroundColor: "#111827",
+    backgroundColor: "transparent",
     paddingVertical: 10,
     paddingHorizontal: 18,
-    borderRadius: 12,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: "#ff8c47",
   },
   addButtonText: {
-    color: "#ffffff",
-    fontSize: 15,
+    color: "#ff8c47",
+    fontSize: 14,
     fontWeight: "600",
+    
   },
   gridContainer: {
     flexDirection: "row",
@@ -179,7 +183,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     borderRadius: 16,
     marginBottom: 20,
-    shadowColor: "#000",
+    shadowColor: "#ff8c47",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
@@ -201,7 +205,7 @@ const styles = StyleSheet.create({
   areaName: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#111827",
+    color: "#ff8c47",
     flexShrink: 1,
   },
   optionsButton: {
@@ -211,7 +215,7 @@ const styles = StyleSheet.create({
   },
   optionsButtonText: {
     fontSize: 18,
-    color: "#6B7280",
+    color: "#ff8c47",
   },
 });
 

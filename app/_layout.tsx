@@ -8,6 +8,7 @@ import Toast from "react-native-toast-message";
 import GetCurrentUserProvider from "@/providers/GetCurrentUserProvider";
 import { Provider } from "react-redux";
 import { store } from "@/stores";
+import React from "react";
 export default function Layout() {
   return <>
     <PaperProvider>

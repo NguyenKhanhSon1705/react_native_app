@@ -4,6 +4,7 @@ import { shopReducer } from './shopStore/shopReducer';
 import { areaReducer } from './areaStore/areaReducer';
 import { tableReducer } from './tableStore/tableReducer';
 import { tableAreaReducer } from './tableareaStore/tableareaReducer';
+import { tableDishReducer } from './tabledishStore/tabledishReducer';
 export const store = configureStore({
   reducer: {
     authStore: authSlice.reducer,
@@ -11,6 +12,7 @@ export const store = configureStore({
     tableStore: tableReducer,
     shopStore: shopReducer,
     tableAreaStore: tableAreaReducer,
+    tableDishStore: tableDishReducer,
   },
 });
 
