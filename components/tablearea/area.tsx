@@ -39,7 +39,7 @@ const Area = ({ visible, onClose, onSelectArea }: Props) => {
     }, [dispatch]);
 
     // Auto chọn phần tử đầu tiên
- 
+
     useEffect(() => {
         if (areaList.length > 0) {
             if (onSelectArea) {
@@ -111,7 +111,7 @@ const Area = ({ visible, onClose, onSelectArea }: Props) => {
             >
                 <Surface style={styles.drawerSurface}>
                     <Drawer.Section
-                    title="Danh sách khu vực" showDivider={false}>
+                        title="Danh sách khu vực" showDivider={false}>
                         {areaList.map((area) => (
                             <Button
                                 key={area.id}
@@ -119,9 +119,11 @@ const Area = ({ visible, onClose, onSelectArea }: Props) => {
                                 style={{
                                     borderRadius: 5,
                                     marginVertical: 4,
-                                    borderColor: '#ccc',
+                                    borderColor: '#ff8c47',
+                                    marginLeft: 20,
+                                    marginRight: 20
                                 }}
-                                textColor='#000'
+                                textColor='#ff8c47'
                                 // label={area.areaName}
                                 onPress={() => {
                                     setActiveArea({ areaId: area.id, areaName: area.areaName });
@@ -165,6 +167,6 @@ const styles = StyleSheet.create({
     },
     backdrop: {
         flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.4)',
+        backgroundColor: 'transparent',
     },
 });

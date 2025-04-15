@@ -1,4 +1,5 @@
 import { MaterialIcons } from "@expo/vector-icons";
+import React from "react";
 import { Pressable, PressableProps, Text } from "react-native";
 
 interface ITabBarBottonProps extends PressableProps {

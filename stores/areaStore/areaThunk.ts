@@ -9,7 +9,6 @@ const getAreaData = createAsyncThunk(
     async (_, { rejectWithValue }): Promise<IAppResposeBase<AreaData[]>> => {
         try {
             const shopId = await cookiesIdShop.getCookieIdShop();
-            console.log("shoID",shopId);
             const response = await httpRequest.get<IAppResposeBase<AreaData[]>>(`/api/areas/get-list-areas` , {
                 params: {
                     idShop: shopId

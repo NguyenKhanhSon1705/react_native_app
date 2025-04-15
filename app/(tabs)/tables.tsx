@@ -8,6 +8,7 @@ import { ITableData , ITableRequest } from "@/interfaces/table.ts/TableTypes";
 import tableAction from "@/stores/tableStore/tableThunk";
 import TableModal from "../../components/tables/components/editTableModal";
 import TableOptionsModal from "../../components/tables/components/tableOptionModal";
+import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 
 const TableScreen = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -104,12 +105,16 @@ const TableScreen = () => {
       <ScrollView contentContainerStyle={styles.gridContainer}>
         {tableList.map((table: ITableData) => (
           <View key={table.id} style={styles.areaCard}>
-            <Image source={require("@/assets/table.png")} style={styles.areaImage} />
+            <FontAwesome5 
+            name="table"
+            size={50}
+            color= "#ff8c47"
+            style={styles.areaImage} />
             <View style={styles.areaDetails}>
               <View style={styles.areaTextContainer}>
                 <Text numberOfLines={1} ellipsizeMode="tail">
                   <Text style={[styles.areaName, { color: "#999" }]}>{table.areaName} - </Text>
-                  <Text style={styles.areaName}>{table.nameTable}</Text>
+                  <Text style={[styles.areaName, { color: "#ff8c47" }]}>{table.nameTable}</Text>
                 </Text>
               </View>
 
@@ -159,15 +164,18 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: "bold",
+    color: "#ff8c47",
   },
   addButton: {
-    backgroundColor: "black",
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    borderRadius: 5,
+    backgroundColor: "transparent",
+    paddingVertical: 10,
+    paddingHorizontal: 18,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: "#ff8c47",
   },
   addButtonText: {
-    color: "white",
+    color: "#ff8c47",
     fontSize: 14,
     fontWeight: "bold",
   },
@@ -186,8 +194,7 @@ const styles = StyleSheet.create({
   },
 
   areaImage: {
-    width: "50%",
-    height: 50,
+    
     resizeMode: "cover",
     alignSelf: "center",
     marginTop: 10,
@@ -207,7 +214,7 @@ const styles = StyleSheet.create({
   },
   optionsButtonText: {
     fontSize: 16,
-    color: "#666",
+    color: "#ff8c47",
   },
   areaTextContainer: {
     flexDirection: "column",

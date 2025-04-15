@@ -3,7 +3,7 @@ import { View } from "react-native";
 import styled from "styled-components";
 import ChooseShopItem from "./components/chooseShopItem";
 import { useRouter } from "expo-router";
-import ButtonBack from "@/components/buttonBack";
+
 import { useDispatch, useSelector } from "react-redux";
 import shopAction from "@/stores/shopStore/shopThunks";
 import { AppDispatch, RootState } from "@/stores";
@@ -11,6 +11,8 @@ import { IShopData } from "@/interfaces/shop/shopDTO";
 import cookiesIdShop from "@/utils/functions/cookieIdShop";
 import routes_path from "@/routes/routes_path";
 import { SafeAreaView } from "react-native-safe-area-context";
+import React from "react";
+import BackButton from "@/components/BackButton ";
 
 const Container = styled(SafeAreaView)`
     background-color: #fff;
@@ -41,11 +43,7 @@ const ChooseShop: FC = () => {
     return (
         <Container>
             <ContainerHeader>
-                <ButtonBack
-                    iconName="angle-left"
-                    size={36}
-                    color="#272b3b"
-                    onPress={() => router.back()} />
+                <BackButton />
                 {/* <ButtonBack
                     iconName="plus"
                     size={36}

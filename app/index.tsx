@@ -6,6 +6,7 @@ import { router, useRootNavigationState } from "expo-router";
 import { useEffect } from "react";
 import accessToken from "@/utils/functions/accessToken";
 import routes_path from "@/routes/routes_path";
+import React from "react";
 
 export default function Page() {
   const rootNavigation = useRootNavigationState();
