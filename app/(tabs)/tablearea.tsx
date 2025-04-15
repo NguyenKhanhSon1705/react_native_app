@@ -9,6 +9,7 @@ import { useTableAreaWebsocket } from "@/websocket/wstablearea";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ITableAreaData } from "@/interfaces/tablearea/tableareaType";
 import { router } from "expo-router";
+import LoadingOverlay from "@/components/loadingrotate";
 
 const TableArea = () => {
     const [drawerVisible, setDrawerVisible] = useState(false);
@@ -16,8 +17,8 @@ const TableArea = () => {
     const [refreshing, setRefreshing] = useState(false); // Trạng thái làm mới
     const dispatch = useDispatch<AppDispatch>();
 
-    const tablearea = useSelector(
-        (state: RootState) => state.tableAreaStore.tablearea,
+    const {loading , error , tablearea} = useSelector(
+        (state: RootState) => state.tableAreaStore,
         shallowEqual
     );
 
@@ -54,6 +55,9 @@ const TableArea = () => {
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
+            {
+                loading && <LoadingOverlay />
+            }
             <Button
                 style={{
                     height: 45,

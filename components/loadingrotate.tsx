@@ -1,31 +1,47 @@
-import React from 'react';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
-import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
+// components/LoadingOverlay.tsx
 
-const LoadingRotate = () => (
-  <SafeAreaProvider>
-    <SafeAreaView style={styles.wrapper}>
+import React from 'react';
+import { View, StyleSheet, ActivityIndicator, Text } from 'react-native';
+import { Portal } from 'react-native-paper';
+
+type Props = {
+  message?: string;
+};
+
+const LoadingOverlay = ({message }: Props) => {
+  return (
+    <Portal>
       <View style={styles.overlay}>
-        <ActivityIndicator size="large" color="#00ff00" />
+        <View style={styles.loaderContainer}>
+          <ActivityIndicator size="large" color="#ff8c47" />
+          {message && <Text style={styles.message}>{message}</Text>}
+        </View>
       </View>
-    </SafeAreaView>
-  </SafeAreaProvider>
-);
+    </Portal>
+  );
+};
+
+export default LoadingOverlay;
 
 const styles = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-  },
   overlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 200,
-    zIndex: 999, // đảm bảo nằm trên cùng
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)', // mờ toàn màn hình
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex: 9999, // ghi đè cả tabbar
+  },
+  loaderContainer: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 10,
+  },
+  message: {
+    marginTop: 10,
+    color: '#333',
+    fontSize: 16,
   },
 });
-
-export default LoadingRotate;

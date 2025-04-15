@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.4",
+    "@gorhom/bottom-sheet": "^5.1.2",
     "@hookform/resolvers": "^4.1.1",
     "@microsoft/signalr": "^8.0.7",
     "@reduxjs/toolkit": "^2.6.1",

@@ -13,6 +13,8 @@ import BackButton from "@/components/BackButton ";
 import formatCurrency from "@/utils/functions/formatCurrency";
 import formatDatetime from "@/utils/functions/formatDatetime";
 import { MaterialIcons } from "@expo/vector-icons";
+import Dishmodal from "@/components/tabledish/dishmodal";
+import LoadingOverlay from "@/components/loadingrotate";
 
 const Container = styled(View)`
   flex: 1;
@@ -44,20 +46,13 @@ const FoodCard = styled(Animatable.View)`
   padding: 14px;
   margin: 8px 16px;
   border-radius: 16px;
-  elevation: 4;
-  shadow-color: #000;
-  shadow-opacity: 0.1;
-  shadow-radius: 8px;
+  
 `;
 
 const FoodImage = styled(Image)`
   width: 100px;
   height: 100px;
   border-radius: 8px;
-  elevation: 4;
-  shadow-color: #000;
-  shadow-opacity: 0.1;
-  shadow-radius: 8px;
   padding: 2px  ;
 `;
 
@@ -111,14 +106,13 @@ const ButtonCustom = styled(Button)`
     margin-bottom: 4px;
 `
 
-const tabs = ["All", "Breakfast", "Lunch", "Dinner"];
-
 export default function FoodListScreen() {
 
     const dispatch = useDispatch<AppDispatch>();
     const [activeTab, setActiveTab] = useState("All");
     const [isBtnUpdate, setIsBtnUpdate] = useState<boolean>(false);
     const [foods, setFoods] = useState<IDish[] | undefined>();
+    const [modalVisible, setModalVisible] = useState(false);
     const { tableName, tableId } = useLocalSearchParams();
     const { loading, tabledish, error } = useSelector(
         (state: RootState) => state.tableDishStore,
@@ -164,6 +158,9 @@ export default function FoodListScreen() {
             )
         );
     };
+    const handleAdddish = () => {
+        setModalVisible(true)
+    }
 
     const handleUpdate = () => {
 
@@ -182,6 +179,7 @@ export default function FoodListScreen() {
     };
     return (
         <Container>
+            {loading && <LoadingOverlay message="Đang tải..." />}
             <View
                 style={{
                     display: 'flex',
@@ -202,28 +200,30 @@ export default function FoodListScreen() {
                     fontWeight: "bold",
                     flex: 1,
                 }}>
-                    {tableName}<Text style={{ color: "#ccc" }}> - {tabledish.areaName}</Text>
+                    {tableName} <Text style={{ color: "#ccc" }}>- {tabledish.areaName}</Text>
                 </Text>
                 <View
                     style={{
                         marginRight: 12
                     }}
-                > <TouchableOpacity
-                    style={{
-                        backgroundColor: "#f1f3f6",
-                        width: 36,
-                        height: 36,
-                        borderRadius: 50,
-                        justifyContent: "center",
-                        alignItems: "center",
-                        shadowColor: "#000",
-                        shadowOffset: { width: 0, height: 1 },
-                        shadowOpacity: 0.1,
-                        shadowRadius: 2,
-                        margin: 10,
-                        elevation: 3,
-                    }}
-                    onPress={() => console.log("Back")}>
+                >
+                    <TouchableOpacity
+                        style={{
+                            backgroundColor: "#f1f3f6",
+                            width: 36,
+                            height: 36,
+                            borderRadius: 50,
+                            justifyContent: "center",
+                            alignItems: "center",
+                            shadowColor: "#000",
+                            shadowOffset: { width: 0, height: 1 },
+                            shadowOpacity: 0.1,
+                            shadowRadius: 2,
+                            margin: 10,
+                            elevation: 3,
+                        }}
+                        onPress={() => console.log("Back")}
+                    >
                         <MaterialIcons name="menu" size={20} color="#2c2c2c" />
                     </TouchableOpacity>
                 </View>
@@ -251,9 +251,9 @@ export default function FoodListScreen() {
                     }}
                     textColor="#fff"
                     contentStyle={{ justifyContent: 'flex-start' }}
+                    onPress={handleAdddish}
                 >Thêm món ăn</ButtonCustom>
             </View>
-
             <SwipeListView
                 data={filteredFoods}
                 keyExtractor={(item) => item.id.toString()}
@@ -305,7 +305,6 @@ export default function FoodListScreen() {
                             }}>
                             </View>
                         </Info>
-                        {/* <IconButton icon="dots-horizontal" size={20} /> */}
                     </FoodCard>
                 )}
                 renderHiddenItem={({ item }) => (
@@ -393,6 +392,11 @@ export default function FoodListScreen() {
 
 
             </View>
+            <Dishmodal
+                visible={modalVisible}
+                onClose={() => setModalVisible(false)}
+                onSelectArea={(id, name) => console.log('Selected:', id, name)}
+            />
         </Container>
     );
 }

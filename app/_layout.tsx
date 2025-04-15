@@ -17,7 +17,6 @@ export default function Layout() {
         <GetCurrentUserProvider>
           <LanguageProvider>
             <SafeAreaProvider>
-              {/* <Stack screenOptions={{ headerShown: false }} /> */}
               <Slot />
               <Toast />
             </SafeAreaProvider>

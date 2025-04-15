@@ -1,14 +1,14 @@
 import React from "react";
 import { TouchableOpacity, View, StyleSheet } from "react-native";
-import Icon from "react-native-vector-icons/Feather"; // hoặc lucide-react-native
 import { useRouter } from "expo-router"; // hoặc useNavigation nếu dùng react-navigation
+import { MaterialIcons } from "@expo/vector-icons";
 
 const BackButton = () => {
   const router = useRouter(); // nếu dùng expo-router
 
   return (
     <TouchableOpacity style={styles.container} onPress={() => router.back()}>
-      <Icon name="chevron-left" size={20} color="#2c2c2c" />
+      <MaterialIcons name="chevron-left" size={20} color="#2c2c2c" />
     </TouchableOpacity>
   );
 };

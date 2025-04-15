@@ -36,11 +36,6 @@ interface IItem {
     name: string;
 }
 
-interface Props {
-    data: IItem[];
-    onChangeSelected: (selectedIds: string[]) => void;
-}
-
 const ListDishCheckbox = () => {
     const { tableName, tableId } = useLocalSearchParams();
     const dispatch = useDispatch<AppDispatch>();

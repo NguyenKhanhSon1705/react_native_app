@@ -27,6 +27,7 @@ const tabledishSlice = createSlice({
                 state.error = null;
             })
             .addCase(tabledishAction.getTableDishData.fulfilled, (state, action) => {
+                state.tabledish.dish = []
                 state.tabledish = action.payload.data || ({} as ITableDishData);
                 state.loading = false;
             })
