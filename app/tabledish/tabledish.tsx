@@ -15,31 +15,13 @@ import formatDatetime from "@/utils/functions/formatDatetime";
 import { MaterialIcons } from "@expo/vector-icons";
 import Dishmodal from "@/components/tabledish/dishmodal";
 import LoadingOverlay from "@/components/loadingrotate";
+import TotalTableInfoSlice from "@/components/tabledish/totalTableInfoSlice";
 
 const Container = styled(View)`
   flex: 1;
   background-color: #f2f2f2;
   padding-top: 50px;
 `;
-
-const TabContainer = styled(View)`
-  flex-direction: row;
-  justify-content: space-around;
-  margin-bottom: 10px;
-`;
-
-const TabItem = styled(TouchableOpacity) <{ active: boolean }>`
-  padding: 10px;
-  border-bottom-width: 2px;
-  border-bottom-color: ${(props) => (props.active ? "#ff6b6b" : "transparent")};
-`;
-
-const TabText = styled(Text) <{ active: boolean }>`
-  color: ${(props) => (props.active ? "#ff6b6b" : "#aaa")};
-  font-weight: bold;
-  font-size: 14px;
-`;
-
 const FoodCard = styled(Animatable.View)`
   background-color: #fff;
   flex-direction: row;
@@ -109,10 +91,10 @@ const ButtonCustom = styled(Button)`
 export default function FoodListScreen() {
 
     const dispatch = useDispatch<AppDispatch>();
-    const [activeTab, setActiveTab] = useState("All");
     const [isBtnUpdate, setIsBtnUpdate] = useState<boolean>(false);
     const [foods, setFoods] = useState<IDish[] | undefined>();
-    const [modalVisible, setModalVisible] = useState(false);
+    const [modalDishVisible, setModalDishVisible] = useState(false);
+    const [modalTotalTableInfoSlice, setModalTotalTableInfoSlice] = useState(false);
     const { tableName, tableId } = useLocalSearchParams();
     const { loading, tabledish, error } = useSelector(
         (state: RootState) => state.tableDishStore,
@@ -123,14 +105,11 @@ export default function FoodListScreen() {
     }, [tableId]);
 
     useEffect(() => {
-        if (tabledish.dish?.length > 0 && tabledish.isActive) {
-            setFoods(tabledish.dish);
+        setFoods(tabledish?.dish);
+        if (tabledish.isActive) {
             setIsBtnUpdate(true);
         }
-    }, [tabledish.dish, tabledish.isActive])
-    const filteredFoods = (foods || []).filter((f) =>
-        activeTab === "All" ? true : f.type === activeTab
-    );
+    }, [tabledish]);
 
     const handleDelete = (rowKey: string) => {
         Alert.alert("Xóa món ăn", "Bạn có chắc chắn muốn xóa món ăn này?",
@@ -159,7 +138,7 @@ export default function FoodListScreen() {
         );
     };
     const handleAdddish = () => {
-        setModalVisible(true)
+        setModalDishVisible(true)
     }
 
     const handleUpdate = () => {
@@ -222,7 +201,7 @@ export default function FoodListScreen() {
                             margin: 10,
                             elevation: 3,
                         }}
-                        onPress={() => console.log("Back")}
+                        onPress={() => setModalTotalTableInfoSlice(true)}
                     >
                         <MaterialIcons name="menu" size={20} color="#2c2c2c" />
                     </TouchableOpacity>
@@ -240,9 +219,6 @@ export default function FoodListScreen() {
                     borderBottomColor: "#ccc",
                 }}
             >
-                <Text style={{ marginLeft: 20, fontSize: 18, color: "#ed0000" }}>
-                    Tổng {filteredFoods.length} món
-                </Text>
                 <ButtonCustom
                     mode="contained"
                     icon={"plus"}
@@ -252,10 +228,10 @@ export default function FoodListScreen() {
                     textColor="#fff"
                     contentStyle={{ justifyContent: 'flex-start' }}
                     onPress={handleAdddish}
-                >Thêm món ăn</ButtonCustom>
+                >Thêm</ButtonCustom>
             </View>
             <SwipeListView
-                data={filteredFoods}
+                data={foods}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
                     <FoodCard animation="fadeInUp" duration={400}>
@@ -325,7 +301,11 @@ export default function FoodListScreen() {
                 previewOpenValue={-40}
                 previewOpenDelay={300}
             />
-
+            <TotalTableInfoSlice
+            table={tabledish}
+                visible={modalTotalTableInfoSlice}
+                onClose={() => setModalTotalTableInfoSlice(false)}
+            />
             <View
                 style={{
                     height: 120,
@@ -339,7 +319,8 @@ export default function FoodListScreen() {
                     backgroundColor: "#fff",
                     borderTopLeftRadius: 30,
                     borderTopRightRadius: 30,
-                    paddingBottom: 10
+                    paddingBottom: 10,
+                    zIndex: 100
                 }}
             >
                 <View>
@@ -393,10 +374,11 @@ export default function FoodListScreen() {
 
             </View>
             <Dishmodal
-                visible={modalVisible}
-                onClose={() => setModalVisible(false)}
+                visible={modalDishVisible}
+                onClose={() => setModalDishVisible(false)}
                 onSelectArea={(id, name) => console.log('Selected:', id, name)}
             />
+
         </Container>
     );
 }

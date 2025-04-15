@@ -7,27 +7,40 @@ import {
     Animated,
     Easing,
     ScrollView,
+    FlatList,
+    TouchableOpacity,
+    Image,
+    Text,
 } from 'react-native';
-import { Button, Surface, Drawer } from 'react-native-paper';
+import { Button, Surface, Drawer, Searchbar } from 'react-native-paper';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { AppDispatch, RootState } from '@/stores';
 import areaAction from '@/stores/areaStore/areaThunk';
 import { useTableAreaWebsocket } from '@/websocket/wstablearea';
 
 const screenHeight = Dimensions.get('window').height;
-const modalHeight = screenHeight * 0.8;
+const modalHeight = screenHeight * 0.78;
 
 type Props = {
     visible: boolean;
     onClose: () => void;
+    onItemPress?: (item: HorizontalItemProps) => void;
     onSelectArea?: (areaId: number, areaName: string) => void;
 };
-
-const DishModal = ({ visible, onClose, onSelectArea }: Props) => {
+type HorizontalItemProps = {
+    title: string;
+    imageUrl: string;
+  };
+const HorizontalItem = ({ title, imageUrl }: HorizontalItemProps) => (
+    <View style={styles.itemContainer}>
+      <Image source={{ uri: imageUrl }} style={styles.image} />
+      <Text style={styles.title}>{title}</Text>
+    </View>
+  );
+const DishModal = ({ visible, onClose, onSelectArea , onItemPress }: Props) => {
     const slideAnim = useRef(new Animated.Value(modalHeight)).current;
     const dispatch = useDispatch<AppDispatch>();
-    const [activeArea, setActiveArea] = useState<{ areaId?: number; areaName?: string }>({});
-    useTableAreaWebsocket(activeArea.areaId);
+    const [searchQuery, setSearchQuery] = React.useState('');
 
     const areaList = useSelector(
         (state: RootState) => state.areaStore.areas,
@@ -44,7 +57,6 @@ const DishModal = ({ visible, onClose, onSelectArea }: Props) => {
         if (areaList.length > 0) {
             if (onSelectArea) {
                 onSelectArea(areaList[0].id, areaList[0].areaName);
-                setActiveArea({ areaId: areaList[0].id, areaName: areaList[0].areaName });
             }
         }
     }, [areaList]);
@@ -53,7 +65,7 @@ const DishModal = ({ visible, onClose, onSelectArea }: Props) => {
         if (visible) {
             setIsVisible(true);
             Animated.timing(slideAnim, {
-                toValue: 0,
+                toValue: 40,
                 duration: 300,
                 easing: Easing.out(Easing.ease),
                 useNativeDriver: true,
@@ -86,7 +98,6 @@ const DishModal = ({ visible, onClose, onSelectArea }: Props) => {
     const handleSelectArea = useCallback(
         (areaId: number, areaName: string) => {
             if (onSelectArea) onSelectArea(areaId, areaName);
-            setActiveArea({ areaId, areaName });
             handleBackdropPress(); // đóng modal
         },
         [onSelectArea, handleBackdropPress]
@@ -111,6 +122,41 @@ const DishModal = ({ visible, onClose, onSelectArea }: Props) => {
                         contentContainerStyle={{ paddingBottom: 40 }}
                         showsVerticalScrollIndicator={false}
                     >
+                        <View>
+                            <Searchbar
+                                placeholder="Search dish"
+                                onChangeText={setSearchQuery}
+                                value={searchQuery}
+                                style={{
+                                    borderRadius: 10,
+                                    // backgroundColor: '#ccc'
+                                }}
+                            />
+                        </View>
+                        <View>
+                            <FlatList
+                                data={
+                                    [
+                                        { title: 'Món 1', imageUrl: 'https://source.unsplash.com/40x40/?food' },
+                                        { title: 'Món 2', imageUrl: 'https://source.unsplash.com/40x40/?burger' },
+                                        { title: 'Món 3', imageUrl: 'https://source.unsplash.com/40x40/?pizza' },
+                                        { title: 'Món 4', imageUrl: 'https://source.unsplash.com/40x40/?drink' },
+                                      ]
+                                }
+                                keyExtractor={(item, index) => `item-${index}`}
+                                horizontal
+                                showsHorizontalScrollIndicator={false}
+                                contentContainerStyle={{ paddingHorizontal: 10 }}
+                                renderItem={({ item }) => (
+                                    <TouchableOpacity
+                                        style={styles.card}
+                                        onPress={() => onItemPress && onItemPress(item)}
+                                    >
+                                        <HorizontalItem {...item} />
+                                    </TouchableOpacity>
+                                )}
+                            />
+                        </View>
                         <Drawer.Section title="Danh sách khu vực" showDivider={false}>
                             {areaList.map((area) => (
                                 <Button
@@ -164,6 +210,35 @@ const styles = StyleSheet.create({
         borderColor: '#ff8c47',
         marginHorizontal: 20,
     },
+
+
+    //
+    card: {
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        marginRight: 12,
+        elevation: 3,
+        padding: 10,
+        width: 160,
+        alignItems: 'center',
+      },
+      itemContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+      },
+      image: {
+        width: 40,
+        height: 40,
+        borderRadius: 8,
+        marginRight: 10,
+        backgroundColor: '#ccc',
+      },
+      title: {
+        fontSize: 14,
+        fontWeight: '600',
+        color: '#333',
+        flexShrink: 1,
+      },
 });
 
 export default React.memo(DishModal);

@@ -48,7 +48,7 @@ const ListDishCheckbox = () => {
     }, [tableId]);
 
     const onChangeSelected = (selectedIds: string[]) => {
-        console.log("Đã chọn:", selectedIds);
+        // console.log("Đã chọn:", selectedIds);
     };
     const data = [
         { id: "1", name: "Bàn A1" },
