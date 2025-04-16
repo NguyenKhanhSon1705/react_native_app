@@ -12,11 +12,14 @@ import {
     Image,
     Text,
 } from 'react-native';
-import { Button, Surface, Drawer, Searchbar } from 'react-native-paper';
+import { Surface, Searchbar } from 'react-native-paper';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { AppDispatch, RootState } from '@/stores';
-import areaAction from '@/stores/areaStore/areaThunk';
-import { useTableAreaWebsocket } from '@/websocket/wstablearea';
+import { IDishDTO, IMenuGroupInfo } from '@/interfaces/dish/dishType';
+import dishAction from '@/stores/dishStore/dishThunk';
+import useDebounce from '@/utils/hooks/useDebouse';
+import LoadingOverlay from '../loadingrotate';
+import DishViewList from './dishViewList';
 
 const screenHeight = Dimensions.get('window').height;
 const modalHeight = screenHeight * 0.78;
@@ -24,42 +27,50 @@ const modalHeight = screenHeight * 0.78;
 type Props = {
     visible: boolean;
     onClose: () => void;
-    onItemPress?: (item: HorizontalItemProps) => void;
+    onItemPress?: (item: IMenuGroupInfo) => void;
     onSelectArea?: (areaId: number, areaName: string) => void;
 };
-type HorizontalItemProps = {
-    title: string;
-    imageUrl: string;
-  };
-const HorizontalItem = ({ title, imageUrl }: HorizontalItemProps) => (
+
+const HorizontalItem = ({ name, image }: IMenuGroupInfo) => (
     <View style={styles.itemContainer}>
-      <Image source={{ uri: imageUrl }} style={styles.image} />
-      <Text style={styles.title}>{title}</Text>
+        <Image
+            source={
+                image
+                    ? { uri: image }
+                    : require('@/assets/logo1.png') // Hình ảnh mặc định
+            }
+            style={styles.image}
+        />
+        <Text style={styles.title}>{name}</Text>
     </View>
-  );
-const DishModal = ({ visible, onClose, onSelectArea , onItemPress }: Props) => {
+);
+
+const DishModal = ({ visible, onClose, onSelectArea, onItemPress }: Props) => {
     const slideAnim = useRef(new Animated.Value(modalHeight)).current;
     const dispatch = useDispatch<AppDispatch>();
     const [searchQuery, setSearchQuery] = React.useState('');
+    const [paramDish, setParamDish] = useState<IDishDTO>({
+        pageIndex: 1,
+        pageSize: 10,
+        search: '',
+        menuGroupId: null
+    });
+    const debouseParamDish = useDebounce(paramDish, 700)
+    const [selectedItemId, setSelectedItemId] = useState<number | null>(null); // State để lưu item được chọn
+    const flatListRef = useRef<FlatList>(null); // Tham chiếu đến FlatList
 
-    const areaList = useSelector(
-        (state: RootState) => state.areaStore.areas,
+    const { loading, dish, menuGroup, error } = useSelector(
+        (state: RootState) => state.dishStore,
         shallowEqual
     );
-
+    console.log(dish?.items)
     const [isVisible, setIsVisible] = useState(false);
-
+    useEffect(()=>{
+        dispatch(dishAction.getMenuGroupInfo());
+    } , [dispatch])
     useEffect(() => {
-        dispatch(areaAction.getAreaData());
-    }, [dispatch]);
-
-    useEffect(() => {
-        if (areaList.length > 0) {
-            if (onSelectArea) {
-                onSelectArea(areaList[0].id, areaList[0].areaName);
-            }
-        }
-    }, [areaList]);
+        dispatch(dishAction.getDishInfo(debouseParamDish));
+    }, [dispatch , debouseParamDish]);
 
     useEffect(() => {
         if (visible) {
@@ -83,6 +94,9 @@ const DishModal = ({ visible, onClose, onSelectArea , onItemPress }: Props) => {
         }
     }, [visible]);
 
+    useEffect(() => {
+        setParamDish(prev => ({ ...prev, menuGroupId: selectedItemId }))
+    }, [selectedItemId])
     const handleBackdropPress = useCallback(() => {
         Animated.timing(slideAnim, {
             toValue: modalHeight,
@@ -95,18 +109,31 @@ const DishModal = ({ visible, onClose, onSelectArea , onItemPress }: Props) => {
         });
     }, [onClose]);
 
-    const handleSelectArea = useCallback(
-        (areaId: number, areaName: string) => {
-            if (onSelectArea) onSelectArea(areaId, areaName);
-            handleBackdropPress(); // đóng modal
-        },
-        [onSelectArea, handleBackdropPress]
-    );
+    const handleItemPress = (id: number, index: number) => {
+        setSelectedItemId((prevSelectedId) =>
+            prevSelectedId === id ? null : id
+        );
 
+        // Tự động scroll đến item được chọn
+        if (flatListRef.current) {
+            flatListRef.current.scrollToIndex({
+                index,
+                animated: true,
+                viewPosition: 0.5, // Đưa item ra giữa màn hình
+            });
+        }
+    };
+    console.log(loading)
     if (!isVisible) return null;
+
+
+    const handleSubmit = (selectedItems: any) => {
+        console.log('Selected Items', JSON.stringify(selectedItems, null, 2));
+    };
 
     return (
         <View style={styles.overlay}>
+            {loading && <LoadingOverlay/>}
             <TouchableWithoutFeedback onPress={handleBackdropPress}>
                 <View style={styles.backdrop} />
             </TouchableWithoutFeedback>
@@ -118,59 +145,52 @@ const DishModal = ({ visible, onClose, onSelectArea , onItemPress }: Props) => {
                 ]}
             >
                 <Surface style={styles.modalContent}>
-                    <ScrollView
-                        contentContainerStyle={{ paddingBottom: 40 }}
-                        showsVerticalScrollIndicator={false}
+                    <View>
+                        <Searchbar
+                            placeholder="Tìm kiếm món ăn"
+                            onChangeText={(value) => {
+                                setParamDish(prev => ({ ...prev, search: value }))
+                                setSearchQuery(value)
+                            }}
+                            value={searchQuery}
+                            style={{
+                                borderRadius: 12,
+                                backgroundColor: 'trans',
+                                borderColor: '#ccc',
+                                borderWidth: 1
+                            }}
+                        />
+                    </View>
+                    <View
+                        style={{
+                            marginTop: 10
+                        }}
                     >
-                        <View>
-                            <Searchbar
-                                placeholder="Search dish"
-                                onChangeText={setSearchQuery}
-                                value={searchQuery}
-                                style={{
-                                    borderRadius: 10,
-                                    // backgroundColor: '#ccc'
-                                }}
-                            />
-                        </View>
-                        <View>
-                            <FlatList
-                                data={
-                                    [
-                                        { title: 'Món 1', imageUrl: 'https://source.unsplash.com/40x40/?food' },
-                                        { title: 'Món 2', imageUrl: 'https://source.unsplash.com/40x40/?burger' },
-                                        { title: 'Món 3', imageUrl: 'https://source.unsplash.com/40x40/?pizza' },
-                                        { title: 'Món 4', imageUrl: 'https://source.unsplash.com/40x40/?drink' },
-                                      ]
-                                }
-                                keyExtractor={(item, index) => `item-${index}`}
-                                horizontal
-                                showsHorizontalScrollIndicator={false}
-                                contentContainerStyle={{ paddingHorizontal: 10 }}
-                                renderItem={({ item }) => (
-                                    <TouchableOpacity
-                                        style={styles.card}
-                                        onPress={() => onItemPress && onItemPress(item)}
-                                    >
-                                        <HorizontalItem {...item} />
-                                    </TouchableOpacity>
-                                )}
-                            />
-                        </View>
-                        <Drawer.Section title="Danh sách khu vực" showDivider={false}>
-                            {areaList.map((area) => (
-                                <Button
-                                    key={area.id}
-                                    mode="outlined"
-                                    style={styles.areaButton}
-                                    textColor="#ff8c47"
-                                    onPress={() => handleSelectArea(area.id, area.areaName)}
+                        <FlatList
+                            ref={flatListRef} // Tham chiếu đến FlatList
+                            data={menuGroup}
+                            keyExtractor={(item) => `item-${item.id}`}
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            contentContainerStyle={{ paddingHorizontal: 10 }}
+                            renderItem={({ item, index }) => (
+                                <TouchableOpacity
+                                    style={[
+                                        styles.card,
+                                        selectedItemId === item.id && styles.selectedCard, // Thêm border nếu được chọn
+                                    ]}
+                                    onPress={() => handleItemPress(item.id, index)} // Truyền index để scroll
                                 >
-                                    {area.areaName}
-                                </Button>
-                            ))}
-                        </Drawer.Section>
-                    </ScrollView>
+                                    <HorizontalItem {...item} />
+                                </TouchableOpacity>
+                            )}
+                        />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                        <DishViewList
+                        data={dish?.items || []} onSubmit={handleSubmit} 
+                        />
+                    </View>
                 </Surface>
             </Animated.View>
         </View>
@@ -210,35 +230,37 @@ const styles = StyleSheet.create({
         borderColor: '#ff8c47',
         marginHorizontal: 20,
     },
-
-
-    //
     card: {
-        backgroundColor: '#fff',
-        borderRadius: 10,
+        backgroundColor: '#ccc',
+        borderRadius: 12,
         marginRight: 12,
         elevation: 3,
-        padding: 10,
+        padding: 8,
         width: 160,
-        alignItems: 'center',
-      },
-      itemContainer: {
+        alignItems: 'center'
+    },
+    selectedCard: {
+        backgroundColor: '#ff8c47',
+        color: '#fff'
+    },
+    itemContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-      },
-      image: {
+        color: '#fff'
+    },
+    image: {
         width: 40,
         height: 40,
         borderRadius: 8,
         marginRight: 10,
         backgroundColor: '#ccc',
-      },
-      title: {
+    },
+    title: {
         fontSize: 14,
         fontWeight: '600',
-        color: '#333',
+        color: '#fff',
         flexShrink: 1,
-      },
+    },
 });
 
 export default React.memo(DishModal);

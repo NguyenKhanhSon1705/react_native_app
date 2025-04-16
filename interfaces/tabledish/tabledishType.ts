@@ -2,6 +2,7 @@ export interface IDish {
     id: number; // ID của món ăn
     dish_Name: string; // Tên món ăn
     selling_Price: number; // Giá bán
+    unit_Name: string;
     image: string; // URL hình ảnh món ăn
     quantity: number; // Số lượng món ăn
     notes: string; // Ghi chú
