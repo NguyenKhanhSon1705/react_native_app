@@ -1,5 +1,6 @@
 import { IDish } from '@/interfaces/tabledish/tabledishType';
 import React, { useState } from 'react';
+import { ScrollView } from 'react-native';
 import {
     FlatList,
     Text,
@@ -37,52 +38,55 @@ const DishViewList: React.FC<Props> = ({ data, onSubmit }) => {
             layoutMeasurement.height + contentOffset.y >=
             contentSize.height - paddingToBottom
         ) {
-            console.log('Gần đến cuối danh sách!');
+            console.log('Gần đến cuối danh sáskskch!55');
         }
     };
 
     return (
-        <View style={styles.container}>
-            <FlatList
-                data={data}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item }) => {
-                    const isSelected = selectedItems.some((selected) => selected.id === item.id);
-                    return (
-                        <TouchableOpacity
-                            style={[
-                                styles.itemContainer,
-                                isSelected && styles.selectedItem,
-                            ]}
-                            onPress={() => handleSelectItem(item)}
-                        >
-                            <Image
-                                source={
-                                    item.image
-                                        ? { uri: item.image }
-                                        : require('@/assets/logo1.png') // Hình ảnh mặc định
-                                }
-                                style={styles.image}
-                            />
-                            <View style={styles.infoContainer}>
-                                <Text style={styles.dishName}>{item.dish_Name}</Text>
-                                <Text style={styles.unitName}>{item.unit_Name}</Text>
-                                <Text style={styles.price}>{item.selling_Price} đ</Text>
-                            </View>
-                        </TouchableOpacity>
-                    );
-                }}
-                onScroll={({ nativeEvent }) => handleScroll(nativeEvent)}
-                contentContainerStyle={{ paddingBottom: 20 }}
-            />
-            <Button title="Submit" onPress={handleSubmit} />
-        </View>
+        <ScrollView>
+            <View style={styles.container}>
+                <FlatList
+                    data={data}
+                    keyExtractor={(item) => item.id.toString()}
+                    renderItem={({ item }) => {
+                        const isSelected = selectedItems.some((selected) => selected.id === item.id);
+                        return (
+                            <TouchableOpacity
+                                style={[
+                                    styles.itemContainer,
+                                    isSelected && styles.selectedItem,
+                                ]}
+                                onPress={() => handleSelectItem(item)}
+                            >
+                                <Image
+                                    source={
+                                        item.image
+                                            ? { uri: item.image }
+                                            : require('@/assets/logo1.png') // Hình ảnh mặc định
+                                    }
+                                    style={styles.image}
+                                />
+                                <View style={styles.infoContainer}>
+                                    <Text style={styles.dishName}>{item.dish_Name}</Text>
+                                    <Text style={styles.unitName}>{item.unit_Name}</Text>
+                                    <Text style={styles.price}>{item.selling_Price} đ</Text>
+                                </View>
+                            </TouchableOpacity>
+                        );
+                    }}
+                    onScroll={({ nativeEvent }) => handleScroll(nativeEvent)}
+                    contentContainerStyle={{ paddingBottom: 20 }}
+                    style={{ flex: 1 }} // Đảm bảo FlatList chiếm toàn bộ không gian
+                />
+                <Button title="Submit" onPress={handleSubmit} />
+            </View>
+        </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flex: 1, // Đảm bảo container chiếm toàn bộ không gian
         backgroundColor: '#f9f9f9',
         padding: 10,
     },

@@ -65,12 +65,12 @@ const DishModal = ({ visible, onClose, onSelectArea, onItemPress }: Props) => {
     );
     console.log(dish?.items)
     const [isVisible, setIsVisible] = useState(false);
-    useEffect(()=>{
+    useEffect(() => {
         dispatch(dishAction.getMenuGroupInfo());
-    } , [dispatch])
+    }, [dispatch])
     useEffect(() => {
         dispatch(dishAction.getDishInfo(debouseParamDish));
-    }, [dispatch , debouseParamDish]);
+    }, [dispatch, debouseParamDish]);
 
     useEffect(() => {
         if (visible) {
@@ -133,7 +133,7 @@ const DishModal = ({ visible, onClose, onSelectArea, onItemPress }: Props) => {
 
     return (
         <View style={styles.overlay}>
-            {loading && <LoadingOverlay/>}
+            {loading && <LoadingOverlay />}
             <TouchableWithoutFeedback onPress={handleBackdropPress}>
                 <View style={styles.backdrop} />
             </TouchableWithoutFeedback>
@@ -163,6 +163,7 @@ const DishModal = ({ visible, onClose, onSelectArea, onItemPress }: Props) => {
                     </View>
                     <View
                         style={{
+                            paddingBottom: 10,
                             marginTop: 10
                         }}
                     >
@@ -186,9 +187,11 @@ const DishModal = ({ visible, onClose, onSelectArea, onItemPress }: Props) => {
                             )}
                         />
                     </View>
-                    <View style={{ flex: 1 }}>
+                    <View style={{
+                        height:'100%',
+                    }}>
                         <DishViewList
-                        data={dish?.items || []} onSubmit={handleSubmit} 
+                            data={dish?.items || []} onSubmit={handleSubmit}
                         />
                     </View>
                 </Surface>

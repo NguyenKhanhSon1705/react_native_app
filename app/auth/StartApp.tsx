@@ -1,3 +1,4 @@
+import React from "react";
 import { StyleSheet, Text, View } from "react-native"
 import { Avatar, Button } from "react-native-paper";
 import { useNavigation, useRootNavigationState, useRouter } from "expo-router";
