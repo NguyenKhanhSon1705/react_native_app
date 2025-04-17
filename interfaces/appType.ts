@@ -6,5 +6,5 @@ export interface IAppResposeBase<T> {
       message: string;
       details: string;
     };
-    success?: boolean;
+    isSuccess?: boolean;
   }

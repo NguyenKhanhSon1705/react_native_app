@@ -13,6 +13,7 @@ import { Text, View } from "react-native"
 import { Button, Checkbox, TextInput } from "react-native-paper"
 import Toast from "react-native-toast-message";
 import styled from "styled-components";
+import React from "react";
 import * as Yup from "yup";
 
 const CustomFogotPassowrd = styled(View)`
