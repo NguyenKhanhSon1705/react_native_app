@@ -12,6 +12,7 @@ export interface IDishData {
     totalCount: number; // Tổng số món ăn
     pageIndex: number; // Chỉ số trang hiện tại
     pageSize: number; // Số lượng món ăn trên mỗi trang
+    totalPages: number,
     items: IDish[]; // Danh sách món ăn
 }
 

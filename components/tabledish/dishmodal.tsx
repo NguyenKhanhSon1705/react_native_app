@@ -20,6 +20,7 @@ import dishAction from '@/stores/dishStore/dishThunk';
 import useDebounce from '@/utils/hooks/useDebouse';
 import LoadingOverlay from '../loadingrotate';
 import DishViewList from './dishViewList';
+import Images from '@/assets';
 
 const screenHeight = Dimensions.get('window').height;
 const modalHeight = screenHeight * 0.78;
@@ -37,7 +38,7 @@ const HorizontalItem = ({ name, image }: IMenuGroupInfo) => (
             source={
                 image
                     ? { uri: image }
-                    : require('@/assets/logo1.png') // Hình ảnh mặc định
+                    : Images.imgDefault// Hình ảnh mặc định
             }
             style={styles.image}
         />
@@ -51,7 +52,7 @@ const DishModal = ({ visible, onClose, onSelectArea, onItemPress }: Props) => {
     const [searchQuery, setSearchQuery] = React.useState('');
     const [paramDish, setParamDish] = useState<IDishDTO>({
         pageIndex: 1,
-        pageSize: 10,
+        pageSize: 3,
         search: '',
         menuGroupId: null
     });
@@ -63,7 +64,6 @@ const DishModal = ({ visible, onClose, onSelectArea, onItemPress }: Props) => {
         (state: RootState) => state.dishStore,
         shallowEqual
     );
-    console.log(dish?.items)
     const [isVisible, setIsVisible] = useState(false);
     useEffect(() => {
         dispatch(dishAction.getMenuGroupInfo());
@@ -130,7 +130,20 @@ const DishModal = ({ visible, onClose, onSelectArea, onItemPress }: Props) => {
     const handleSubmit = (selectedItems: any) => {
         console.log('Selected Items', JSON.stringify(selectedItems, null, 2));
     };
-
+   console.log(dish?.totalPages)
+    const handleScroll = ({ layoutMeasurement, contentOffset, contentSize }: any) => {
+        const paddingToBottom = 20; // Khoảng cách gần cuối danh sách
+        if (
+            layoutMeasurement.height + contentOffset.y >=
+            contentSize.height - paddingToBottom
+        ) {
+            if ((dish?.totalPages ?? 0) > paramDish.pageIndex) {
+                setParamDish((prev) => ({ ...prev, pageIndex: prev.pageIndex + 1 }));
+                console.log('Page Index:', paramDish.pageIndex + 1);
+            }
+            console.log('Gần đến cuối danh sáskskch!55');
+        }
+    };
     return (
         <View style={styles.overlay}>
             {loading && <LoadingOverlay />}
@@ -187,11 +200,14 @@ const DishModal = ({ visible, onClose, onSelectArea, onItemPress }: Props) => {
                             )}
                         />
                     </View>
-                    <View style={{
+                    <View 
+                    style={{
                         height:'100%',
-                    }}>
+                    }}
+                    >
                         <DishViewList
                             data={dish?.items || []} onSubmit={handleSubmit}
+                            handleScroll={handleScroll}
                         />
                     </View>
                 </Surface>
@@ -240,23 +256,26 @@ const styles = StyleSheet.create({
         elevation: 3,
         padding: 8,
         width: 160,
-        alignItems: 'center'
+        alignItems: 'flex-start',
+          justifyContent: 'flex-start'
     },
     selectedCard: {
         backgroundColor: '#ff8c47',
         color: '#fff'
     },
     itemContainer: {
+        display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        color: '#fff'
+        justifyContent: 'space-between',
+        color: '#fff',
+        
     },
     image: {
         width: 40,
         height: 40,
         borderRadius: 8,
         marginRight: 10,
-        backgroundColor: '#ccc',
     },
     title: {
         fontSize: 14,

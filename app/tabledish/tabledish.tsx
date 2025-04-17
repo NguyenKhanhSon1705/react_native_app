@@ -49,16 +49,6 @@ const FoodName = styled(Text)`
   color: #333;
 `;
 
-const Tag = styled(Text)`
-  font-size: 12px;
-  background-color: #ffe6e6;
-  color: #ff6b6b;
-  padding: 3px 8px;
-  border-radius: 6px;
-  align-self: flex-start;
-  margin-top: 4px;
-`;
-
 const PriceRating = styled(View)`
   flex-direction: row;
   justify-content: space-between;
@@ -302,7 +292,7 @@ export default function FoodListScreen() {
                 previewOpenDelay={300}
             />
             <TotalTableInfoSlice
-            table={tabledish}
+                table={tabledish}
                 visible={modalTotalTableInfoSlice}
                 onClose={() => setModalTotalTableInfoSlice(false)}
             />
@@ -370,8 +360,6 @@ export default function FoodListScreen() {
                     >Hủy bàn</ButtonCustom>
 
                 </View>
-
-
             </View>
             <Dishmodal
                 visible={modalDishVisible}
