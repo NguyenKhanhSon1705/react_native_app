@@ -1,9 +1,10 @@
 import { IShopData } from "@/interfaces/shop/shopDTO";
-import React from "react";
+import React, { useState } from "react";
 import { FC } from "react";
-import { Image, Text, View } from "react-native";
+import { Image, Text, View, TouchableOpacity } from "react-native";
 import { Button } from "react-native-paper";
 import styled from "styled-components";
+import ShopOptionModal from "./shopOptionModal";
 
 const Container = styled(View)`
   padding: 12px;
@@ -63,9 +64,25 @@ const Star = styled(Text)`
 interface IPropsItem {
   propsItem: IShopData;
   onPressIdShop: (id: any) => any;
+  onPressEdit?: (shop: IShopData) => void;
+  onPressDelete?: (shop: IShopData) => void;
 }
 
-const ChooseShopItem: FC<IPropsItem> = ({ propsItem, onPressIdShop }) => {
+const ChooseShopItem: FC<IPropsItem> = ({ 
+  propsItem, 
+  onPressIdShop,
+  onPressEdit,
+  onPressDelete 
+}) => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
+
+  const handleShowOptions = (event: any) => {
+    const { pageX, pageY } = event.nativeEvent;
+    setModalPosition({ top: pageY, left: pageX });
+    setModalVisible(true);
+  };
+
   return (
     <Container>
       <ContainerAvt>
@@ -86,9 +103,11 @@ const ChooseShopItem: FC<IPropsItem> = ({ propsItem, onPressIdShop }) => {
             >
               {propsItem.shopName}
             </Text>
-            <Text style={{ fontSize: 18, fontWeight: "bold", color: "#999" }}>
-              ...
-            </Text>
+            <TouchableOpacity onPress={handleShowOptions}>
+              <Text style={{ fontSize: 18, fontWeight: "bold", color: "#999" }}>
+                ...
+              </Text>
+            </TouchableOpacity>
           </InfoHeader>
 
           {/* Tag + Giá */}
@@ -121,6 +140,20 @@ const ChooseShopItem: FC<IPropsItem> = ({ propsItem, onPressIdShop }) => {
           </InfoHeader>
         </ContainerInfo>
       </ContainerAvt>
+
+      <ShopOptionModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onEdit={() => {
+          onPressEdit?.(propsItem);
+          setModalVisible(false);
+        }}
+        onDelete={() => {
+          onPressDelete?.(propsItem);
+          setModalVisible(false);
+        }}
+        position={modalPosition}
+      />
     </Container>
   );
 };
