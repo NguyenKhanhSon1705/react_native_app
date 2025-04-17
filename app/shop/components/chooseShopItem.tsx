@@ -4,7 +4,7 @@ import { FC } from "react";
 import { Image, Text, View, TouchableOpacity } from "react-native";
 import { Button } from "react-native-paper";
 import styled from "styled-components";
-import ShopOptionModal from "./shopOptionModal";
+import ShopOptionModal from "./ShopOptionModal";
 
 const Container = styled(View)`
   padding: 12px;

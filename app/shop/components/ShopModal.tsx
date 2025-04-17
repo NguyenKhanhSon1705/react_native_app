@@ -8,7 +8,10 @@ import {
     StyleSheet,
     TouchableWithoutFeedback,
     Keyboard,
-    Image
+    Image,
+    KeyboardAvoidingView,
+    ScrollView,
+    Platform
 } from 'react-native';
 import * as ImagePicker from "expo-image-picker";
 import { IShopData } from '@/interfaces/shop/shopDTO';
@@ -79,108 +82,113 @@ const ShopModal: React.FC<ShopModalProps> = ({ visible, onClose, onSubmit, editD
         >
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={styles.modalContainer}>
-                    <View style={styles.modalContent}>
-                        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                            <View>
-                                <Text style={styles.title}>
-                                    {editData ? 'Sửa thông tin' : 'Thêm cửa hàng'}
-                                </Text>
-                            </View>
-                        </TouchableWithoutFeedback>
+                    <KeyboardAvoidingView
+                        behavior={Platform.OS === "ios" ? "padding" : "height"}
+                        style={{ width: '100%' }}
+                    >
+                        <View style={styles.modalContent}>
+                            <ScrollView showsVerticalScrollIndicator={false}>
+                                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                                    <View>
+                                        <Text style={styles.title}>
+                                            {editData ? 'Sửa thông tin' : 'Thêm cửa hàng'}
+                                        </Text>
+                                    </View>
+                                </TouchableWithoutFeedback>
 
-                        <Controller
-                            control={control}
-                            name="shopLogo"
-                            render={({ field: { onChange, value } }) => (
-                                <AvatarPicker
-                                    value={value}
-                                    onChange={onChange}
+                                <Controller
+                                    control={control}
+                                    name="shopLogo"
+                                    render={({ field: { onChange, value } }) => (
+                                        <AvatarPicker
+                                            value={value}
+                                            onChange={onChange}
+                                        />
+                                    )}
                                 />
-                            )}
-                        />
 
-                        <View style={styles.inputContainer}>
-                            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                                <View style={styles.labelContainer}>
-                                    <Text style={styles.label}>Tên cửa hàng</Text>
-                                    <Text style={styles.required}>*</Text>
+                                <View style={styles.inputContainer}>
+                                    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                                        <View style={styles.labelContainer}>
+                                            <Text style={styles.label}>Tên cửa hàng</Text>
+                                            <Text style={styles.required}>*</Text>
+                                        </View>
+                                    </TouchableWithoutFeedback>
+                                    <Controller
+                                        control={control}
+                                        name="shopName"
+                                        rules={{
+                                            required: 'Shop name is required',
+                                            minLength: {
+                                                value: 2,
+                                                message: 'Shop name must be at least 2 characters'
+                                            }
+                                        }}
+                                        render={({ field: { onChange, value } }) => (
+                                            <TextInput
+                                                style={[styles.input, errors.shopName && styles.inputError]}
+                                                placeholder="Enter shop name"
+                                                value={value}
+                                                onChangeText={onChange}
+                                            />
+                                        )}
+                                    />
+                                    {errors.shopName && (
+                                        <Text style={styles.errorText}>{errors.shopName.message}</Text>
+                                    )}
                                 </View>
-                            </TouchableWithoutFeedback>
-                            <Controller
-                                control={control}
-                                name="shopName"
-                                rules={{
-                                    required: 'Shop name is required',
-                                    minLength: {
-                                        value: 2,
-                                        message: 'Shop name must be at least 2 characters'
-                                    }
-                                }}
-                                render={({ field: { onChange, value } }) => (
-                                    <TextInput
-                                        style={[styles.input, errors.shopName && styles.inputError]}
-                                        placeholder="Enter shop name"
-                                        value={value}
-                                        onChangeText={onChange}
-                                    />
-                                )}
-                            />
-                            {errors.shopName && (
-                                <Text style={styles.errorText}>{errors.shopName.message}</Text>
-                            )}
-                        </View>
 
-                        <View style={styles.inputContainer}>
-                            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                                <View style={styles.labelContainer}>
-                                    <Text style={styles.label}>Số điện thoại</Text>
-                                    <Text style={styles.required}>*</Text>
+                                <View style={styles.inputContainer}>
+                                    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                                        <View style={styles.labelContainer}>
+                                            <Text style={styles.label}>Số điện thoại</Text>
+                                            <Text style={styles.required}>*</Text>
+                                        </View>
+                                    </TouchableWithoutFeedback>
+                                    <Controller
+                                        control={control}
+                                        name="shopPhone"
+                                        rules={{
+                                            required: 'Phone number is required',
+                                            pattern: {
+                                                value: /^[0-9]{10}$/,
+                                                message: 'Please enter a valid 10-digit phone number'
+                                            }
+                                        }}
+                                        render={({ field: { onChange, value } }) => (
+                                            <TextInput
+                                                style={[styles.input, errors.shopPhone && styles.inputError]}
+                                                placeholder="Enter phone number"
+                                                value={value}
+                                                keyboardType="phone-pad"
+                                                onChangeText={onChange}
+                                            />
+                                        )}
+                                    />
+                                    {errors.shopPhone && (
+                                        <Text style={styles.errorText}>{errors.shopPhone.message}</Text>
+                                    )}
                                 </View>
-                            </TouchableWithoutFeedback>
-                            <Controller
-                                control={control}
-                                name="shopPhone"
-                                rules={{
-                                    required: 'Phone number is required',
-                                    pattern: {
-                                        value: /^[0-9]{10}$/,
-                                        message: 'Please enter a valid 10-digit phone number'
-                                    }
-                                }}
-                                render={({ field: { onChange, value } }) => (
-                                    <TextInput
-                                        style={[styles.input, errors.shopPhone && styles.inputError]}
-                                        placeholder="Enter phone number"
-                                        value={value}
-                                        keyboardType="phone-pad"
-                                        onChangeText={onChange}
-                                    />
-                                )}
-                            />
-                            {errors.shopPhone && (
-                                <Text style={styles.errorText}>{errors.shopPhone.message}</Text>
-                            )}
-                        </View>
 
-                        <View style={styles.inputContainer}>
-                            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                                <Text style={styles.label}>Địa chỉ</Text>
-                            </TouchableWithoutFeedback>
-                            <Controller
-                                control={control}
-                                name="shopAddress"
-                                render={({ field: { onChange, value } }) => (
-                                    <TextInput
-                                        style={styles.input}
-                                        placeholder="Enter shop address"
-                                        value={value}
-                                        onChangeText={onChange}
+                                <View style={styles.inputContainer}>
+                                    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                                        <Text style={styles.label}>Địa chỉ</Text>
+                                    </TouchableWithoutFeedback>
+                                    <Controller
+                                        control={control}
+                                        name="shopAddress"
+                                        render={({ field: { onChange, value } }) => (
+                                            <TextInput
+                                                style={styles.input}
+                                                placeholder="Enter shop address"
+                                                value={value}
+                                                onChangeText={onChange}
+                                            />
+                                        )}
                                     />
-                                )}
-                            />
-                        </View>
+                                </View>
+                            </ScrollView>
 
-                        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                             <View style={styles.buttonContainer}>
                                 <TouchableOpacity
                                     style={[styles.button, styles.cancelButton]}
@@ -197,8 +205,8 @@ const ShopModal: React.FC<ShopModalProps> = ({ visible, onClose, onSubmit, editD
                                     </Text>
                                 </TouchableOpacity>
                             </View>
-                        </TouchableWithoutFeedback>
-                    </View>
+                        </View>
+                    </KeyboardAvoidingView>
                 </View>
             </TouchableWithoutFeedback>
         </Modal>
@@ -236,13 +244,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        paddingHorizontal: 20,
     },
     modalContent: {
         backgroundColor: 'white',
         borderRadius: 12,
         padding: 20,
-        width: '90%',
-        maxWidth: 500,
+        width: '100%',
+        maxHeight: '80%',
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
@@ -262,7 +271,20 @@ const styles = StyleSheet.create({
     buttonContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: 24,
+        paddingTop: 2,
+        backgroundColor: 'white',
+        borderTopWidth: 1,
+        borderTopColor: '#ddd',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: -3,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        elevation: 5, 
+        borderTopLeftRadius:10,
+        borderTopRightRadius:10
     },
     button: {
         padding: 12,

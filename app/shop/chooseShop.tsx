@@ -20,7 +20,8 @@ import { createImageFormData } from "@/utils/functions/createImageFormData";
 import LoadingOverlay from "@/components/loadingrotate";
 
 const Container = styled(SafeAreaView)`
-    background-color: #fff;
+    flex: 1;
+    background-color: #F5F7FA; 
 `;
 
 const ContainerHeader = styled(View)`
@@ -28,6 +29,8 @@ const ContainerHeader = styled(View)`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    background-color: white; 
+    padding: 12px 0;
 `;
 
 const ChooseShop: FC = () => {
