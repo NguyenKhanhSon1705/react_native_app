@@ -24,7 +24,7 @@
         "backgroundColor": "#ffffff"
       }
     },
-    "android": {
+    "android": { "package": "{your_android_package_name}",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "white"
@@ -37,7 +37,8 @@
     "plugins": [
       ["expo-build-properties"],
       "expo-router",
-      "expo-secure-store"
+      "expo-secure-store",
+      "expo-image-picker"
     ]
   }
 }
