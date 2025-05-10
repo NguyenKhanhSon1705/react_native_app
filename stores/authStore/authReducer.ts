@@ -1,7 +1,7 @@
 import ICurrentUser from "@/interfaces/auth/currentUserType";
 import accessToken from "@/utils/functions/accessToken";
-import { createSlice } from "@reduxjs/toolkit";
 import authThunks from "./authThunks";
+import { createSlice } from "@reduxjs/toolkit";
 
 
 export interface AuthState {
@@ -32,9 +32,9 @@ export const authSlice = createSlice({
             state.loading = true;
         })
         .addCase(authThunks.getCurrentUser.fulfilled, (state, action) => {
-            state.loading = false;
-            // state.currentUser = action.payload;
+            state.currentUser = action.payload.data ?? null;
             state.isAuthenticated = true;
+            state.loading = false;
         })
         .addCase(authThunks.getCurrentUser.rejected, (state) => {
             state.isAuthenticated = false;

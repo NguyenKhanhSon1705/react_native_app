@@ -4,6 +4,7 @@ import accessToken from "../functions/accessToken";
 
 const httpRequest = axios.create({
   baseURL: env.API_URL,
+  // validateStatus: (status) => true,
 });
 
 // Add a request interceptor

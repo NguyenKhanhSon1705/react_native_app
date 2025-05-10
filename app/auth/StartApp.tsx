@@ -1,22 +1,32 @@
 import { StyleSheet, Text, View } from "react-native"
 import { Avatar, Button } from "react-native-paper";
-import { useRouter } from "expo-router";
+import { router } from "expo-router";
 import logo from '../../assets/logo1.png';
 import routes_path from "@/routes/routes_path";
 import { useTranslate } from "@/utils/hooks/useTranslate";
-import Languages from "@/components/languages";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/stores";
+
 const StartApp = () => {
-    const router = useRouter()
     const textConfig = useTranslate();
+    const isAuthenticated = useSelector(
+        (state: RootState) => state.authStore.isAuthenticated
+    );
+    useEffect(() => {
+        if (isAuthenticated) {
+            router.replace(routes_path.TABLEAREA);
+        }
+    }, [isAuthenticated]);
     const nextPage = () => {
         router.push(routes_path.LOGIN)
     }
     return (
         <View style={style.container}>
-            <Avatar.Image 
-            source={logo} 
-            size={200}
-            style={{ backgroundColor: "transparent"}}
+            <Avatar.Image
+                source={logo}
+                size={200}
+                style={{ backgroundColor: "transparent" }}
             ></Avatar.Image>
             <Text>{textConfig("00003")}</Text>
             <View style={style.button}>
