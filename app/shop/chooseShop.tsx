@@ -54,8 +54,6 @@ const ChooseShop: FC = () => {
     const handleSubmit = (data: IShopData) => {
         const formData = createImageFormData(data);
         if (editShop) {
-            console.log(formData);
-            // Dispatch update action
             dispatch(shopAction.updateShop(formData));
         } else {
             dispatch(shopAction.createShop(formData));

@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/stores';
 import areaAction from '@/stores/areaStore/areaThunk';
 import { ITableData } from '@/interfaces/table.ts/TableTypes';
-import { useMemo } from 'react';
 import Toast from "react-native-toast-message";
 import { Dropdown } from 'react-native-element-dropdown';
 interface TableModalProps {
@@ -33,7 +32,6 @@ const TableModal: React.FC<TableModalProps> = ({ visible, onClose, onSave, table
 
     setTableName(table?.nameTable || '');
     const areaIdStr = table?.areaId;
-    console.log("areaIdStr",areaIdStr)
     if (areaIdStr) {
       // const exists = areaList.some((item) => item.id === areaIdStr);
       setSelectedItems(areaIdStr);

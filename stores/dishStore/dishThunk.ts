@@ -9,7 +9,26 @@ const getDishInfo = createAsyncThunk(
     async (param: IDishDTO, { rejectWithValue }): Promise<IAppResposeBase<IDishData>> => {
         try {
             const shopId = await cookiesIdShop.getCookieIdShop();
-            console.log("menuGroupId", param.menuGroupId)
+            const response = await httpRequest.get<IAppResposeBase<IDishData>>(`/api/dish/get-dish-menugroup`, {
+                params: {
+                    "pageIndex": param.pageIndex,
+                    "pageSize": param.pageSize,
+                    "search": param.search,
+                    "menuGroupId": param.menuGroupId,
+                    "shopId": shopId
+                }
+            });
+            return response.data;
+        } catch (error: any) {
+            return rejectWithValue(error.data) as any;
+        }
+    }
+);
+const getDishInfoPaging = createAsyncThunk(
+    "dishPaging/getAllDish",
+    async (param: IDishDTO, { rejectWithValue }): Promise<IAppResposeBase<IDishData>> => {
+        try {
+            const shopId = await cookiesIdShop.getCookieIdShop();
             const response = await httpRequest.get<IAppResposeBase<IDishData>>(`/api/dish/get-dish-menugroup`, {
                 params: {
                     "pageIndex": param.pageIndex,
@@ -45,7 +64,8 @@ const getMenuGroupInfo = createAsyncThunk(
 
 const dishAction = {
     getDishInfo,
-    getMenuGroupInfo
+    getMenuGroupInfo,
+    getDishInfoPaging
 };
 
 export default dishAction;

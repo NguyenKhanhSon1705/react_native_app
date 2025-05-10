@@ -12,13 +12,14 @@ export interface IDishData {
     totalCount: number; // Tổng số món ăn
     pageIndex: number; // Chỉ số trang hiện tại
     pageSize: number; // Số lượng món ăn trên mỗi trang
+    totalPages: number; // Tổng số trang
     items: IDish[]; // Danh sách món ăn
 }
 
 export interface IDishDTO{
     search?: string,
-    pageIndex: number | 1,
-    pageSize: number | 1,
+    pageIndex: number ,
+    pageSize: number,
     menuGroupId?: number | null,
     shopId?: number
 }
