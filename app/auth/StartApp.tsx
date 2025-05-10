@@ -6,16 +6,26 @@ import routes_path from "@/routes/routes_path";
 import { useTranslate } from "@/utils/hooks/useTranslate";
 import React from "react";
 import Toast from "react-native-toast-message";
+import { useSelector } from "react-redux";
+import { RootState } from "@/stores";
 const StartApp = () => {
     const textConfig = useTranslate();
-   
+      const isAuthenticated = useSelector(
+    (state: RootState) => state.authStore.isAuthenticated
+  );
     const nextPage = () => {
         Toast.show({
             text1: textConfig("00018"),
             text2: textConfig("00019"),
             type: "success",
         })
-        router.push(routes_path.LOGIN)
+        if(isAuthenticated){
+            router.push(routes_path.CHOOSESHOP)
+        }
+        else{
+            router.push(routes_path.LOGIN)
+        }
+        
     }
     return (
         <View style={style.container}>
