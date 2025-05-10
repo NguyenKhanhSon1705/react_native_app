@@ -1,5 +1,4 @@
 
-import { ITableAreaData } from "@/interfaces/tablearea/tableareaType";
 import tabledishAction from "./tabledishThunk";
 import { ITableDishData } from "@/interfaces/tabledish/tabledishType";
 import { createSlice } from "@reduxjs/toolkit";
@@ -37,6 +36,5 @@ const tabledishSlice = createSlice({
             })
     },
 });
-// export const { updateTablesArea } = tabledishSlice.actions;
 
 export const tableDishReducer = tabledishSlice.reducer;

@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import dishAction from "./dishThunk";
-import { AreaData, addAreaData, editAreaData } from "@/interfaces/area/AreaTypes";
 import { IDishData, IMenuGroupInfo } from "@/interfaces/dish/dishType";
 
 interface AreaState {
@@ -33,6 +32,23 @@ const dishSlice = createSlice({
                 state.loading = false;
             })
             .addCase(dishAction.getDishInfo.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload as string;
+            })
+        builder
+            .addCase(dishAction.getDishInfoPaging.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(dishAction.getDishInfoPaging.fulfilled, (state, action) => {
+                const newData = action.payload.data as IDishData;
+                state.dish = {
+                    ...newData,
+                    items: [...(state.dish?.items || []), ...newData.items || []],
+                };
+                state.loading = false;
+            })
+            .addCase(dishAction.getDishInfoPaging.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as string;
             })

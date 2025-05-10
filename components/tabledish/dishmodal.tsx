@@ -20,6 +20,7 @@ import dishAction from '@/stores/dishStore/dishThunk';
 import useDebounce from '@/utils/hooks/useDebouse';
 import LoadingOverlay from '../loadingrotate';
 import DishViewList from './dishViewList';
+import { set } from 'date-fns';
 
 const screenHeight = Dimensions.get('window').height;
 const modalHeight = screenHeight * 0.78;
@@ -27,17 +28,21 @@ const modalHeight = screenHeight * 0.78;
 type Props = {
     visible: boolean;
     onClose: () => void;
-    onItemPress?: (item: IMenuGroupInfo) => void;
-    onSelectArea?: (areaId: number, areaName: string) => void;
+    onItemPress?: (item : any) => void;
 };
 
+/*
+    description: component render item in FlatList
+    @param name: string 
+    @param image: string
+*/
 const HorizontalItem = ({ name, image }: IMenuGroupInfo) => (
     <View style={styles.itemContainer}>
         <Image
             source={
                 image
                     ? { uri: image }
-                    : require('@/assets/logo1.png') // Hình ảnh mặc định
+                    : require('@/assets/avatar-default.png')
             }
             style={styles.image}
         />
@@ -45,32 +50,35 @@ const HorizontalItem = ({ name, image }: IMenuGroupInfo) => (
     </View>
 );
 
-const DishModal = ({ visible, onClose, onSelectArea, onItemPress }: Props) => {
+const DishModal = ({ visible, onClose, onItemPress }: Props) => {
     const slideAnim = useRef(new Animated.Value(modalHeight)).current;
     const dispatch = useDispatch<AppDispatch>();
     const [searchQuery, setSearchQuery] = React.useState('');
     const [paramDish, setParamDish] = useState<IDishDTO>({
         pageIndex: 1,
-        pageSize: 10,
+        pageSize: 6,
         search: '',
         menuGroupId: null
     });
-    const debouseParamDish = useDebounce(paramDish, 700)
+    const debouseParamDish = useDebounce(paramDish, 500)
     const [selectedItemId, setSelectedItemId] = useState<number | null>(null); // State để lưu item được chọn
-    const flatListRef = useRef<FlatList>(null); // Tham chiếu đến FlatList
+    const [isVisible, setIsVisible] = useState(false);
+    const flatListRef = useRef<FlatList>(null);
+    const [pageIndexCurrent, setPageIndexCurrent] = useState(2);
 
     const { loading, dish, menuGroup, error } = useSelector(
-        (state: RootState) => state.dishStore,
+        (state: RootState) => state.dishStore as any,
         shallowEqual
     );
-    console.log(dish?.items)
-    const [isVisible, setIsVisible] = useState(false);
-    useEffect(()=>{
+
+    useEffect(() => {
         dispatch(dishAction.getMenuGroupInfo());
-    } , [dispatch])
+    }, [dispatch]);
+
     useEffect(() => {
         dispatch(dishAction.getDishInfo(debouseParamDish));
-    }, [dispatch , debouseParamDish]);
+        setPageIndexCurrent(2);
+    }, [dispatch, debouseParamDish]);
 
     useEffect(() => {
         if (visible) {
@@ -97,6 +105,10 @@ const DishModal = ({ visible, onClose, onSelectArea, onItemPress }: Props) => {
     useEffect(() => {
         setParamDish(prev => ({ ...prev, menuGroupId: selectedItemId }))
     }, [selectedItemId])
+
+    /*
+    description: handle event when user click toggle modal choose dish
+    */
     const handleBackdropPress = useCallback(() => {
         Animated.timing(slideAnim, {
             toValue: modalHeight,
@@ -109,31 +121,53 @@ const DishModal = ({ visible, onClose, onSelectArea, onItemPress }: Props) => {
         });
     }, [onClose]);
 
+    /*
+   description: get data when user click item in menuGroup
+   @param id: number | id item menuGroup
+   @param index: number | index item menuGroup 
+   */
     const handleItemPress = (id: number, index: number) => {
         setSelectedItemId((prevSelectedId) =>
             prevSelectedId === id ? null : id
         );
+        setParamDish(prev => ({ ...prev, pageIndex: 1 }))
 
-        // Tự động scroll đến item được chọn
         if (flatListRef.current) {
             flatListRef.current.scrollToIndex({
                 index,
                 animated: true,
-                viewPosition: 0.5, // Đưa item ra giữa màn hình
+                viewPosition: 0.5,
             });
         }
     };
-    console.log(loading)
     if (!isVisible) return null;
 
+    /*
+    description: listen event scroll end in component DishViewList
+    @param isScrollEnd: boolean
+    */
+    const handleScroll = (isScrollEnd: boolean) => {
+        if (isScrollEnd) {
+            if (pageIndexCurrent <= dish?.totalPages) {
+                setPageIndexCurrent((prev) => {
+                    return prev + 1;
+                });
+                dispatch(dishAction.getDishInfoPaging({ ...paramDish, pageIndex: pageIndexCurrent }))
+            }
+        }
+    }
 
+    /*
+    description: get data when user click button submit
+    @param selectedItems: IDish[]
+    */
     const handleSubmit = (selectedItems: any) => {
-        console.log('Selected Items', JSON.stringify(selectedItems, null, 2));
+        onItemPress && onItemPress(selectedItems);
     };
 
     return (
         <View style={styles.overlay}>
-            {loading && <LoadingOverlay/>}
+            {loading && <LoadingOverlay />}
             <TouchableWithoutFeedback onPress={handleBackdropPress}>
                 <View style={styles.backdrop} />
             </TouchableWithoutFeedback>
@@ -167,7 +201,7 @@ const DishModal = ({ visible, onClose, onSelectArea, onItemPress }: Props) => {
                         }}
                     >
                         <FlatList
-                            ref={flatListRef} // Tham chiếu đến FlatList
+                            ref={flatListRef}
                             data={menuGroup}
                             keyExtractor={(item) => `item-${item.id}`}
                             horizontal
@@ -177,9 +211,9 @@ const DishModal = ({ visible, onClose, onSelectArea, onItemPress }: Props) => {
                                 <TouchableOpacity
                                     style={[
                                         styles.card,
-                                        selectedItemId === item.id && styles.selectedCard, // Thêm border nếu được chọn
+                                        selectedItemId === item.id && styles.selectedCard,
                                     ]}
-                                    onPress={() => handleItemPress(item.id, index)} // Truyền index để scroll
+                                    onPress={() => handleItemPress(item.id, index)}
                                 >
                                     <HorizontalItem {...item} />
                                 </TouchableOpacity>
@@ -188,15 +222,15 @@ const DishModal = ({ visible, onClose, onSelectArea, onItemPress }: Props) => {
                     </View>
                     <View style={{ flex: 1 }}>
                         <DishViewList
-                        data={dish?.items || []} onSubmit={handleSubmit} 
+                            onIsScrollEnd={isscroll => handleScroll(isscroll)}
+                            data={dish as any} onSubmit={handleSubmit}
                         />
                     </View>
                 </Surface>
             </Animated.View>
         </View>
     );
-};
-const styles = StyleSheet.create({
+}; const styles = StyleSheet.create({
     overlay: {
         position: 'absolute',
         top: 0,
@@ -231,34 +265,39 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
     },
     card: {
-        backgroundColor: '#ccc',
+        backgroundColor: '#eae8e8',
         borderRadius: 12,
         marginRight: 12,
         elevation: 3,
         padding: 8,
         width: 160,
-        alignItems: 'center'
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+        borderWidth: 2,
+        borderColor: '#d3d1d1',
     },
     selectedCard: {
-        backgroundColor: '#ff8c47',
-        color: '#fff'
+        borderWidth: 2,
+        borderColor: '#ff8c47',
     },
     itemContainer: {
+        display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        color: '#fff'
+        justifyContent: 'space-between',
+
+
     },
     image: {
         width: 40,
         height: 40,
         borderRadius: 8,
         marginRight: 10,
-        backgroundColor: '#ccc',
     },
     title: {
         fontSize: 14,
         fontWeight: '600',
-        color: '#fff',
+        color: '#000',
         flexShrink: 1,
     },
 });

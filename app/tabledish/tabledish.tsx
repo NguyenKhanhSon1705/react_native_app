@@ -89,17 +89,17 @@ const ButtonCustom = styled(Button)`
 `
 
 export default function FoodListScreen() {
-
     const dispatch = useDispatch<AppDispatch>();
     const [isBtnUpdate, setIsBtnUpdate] = useState<boolean>(false);
     const [foods, setFoods] = useState<IDish[] | undefined>();
     const [modalDishVisible, setModalDishVisible] = useState(false);
     const [modalTotalTableInfoSlice, setModalTotalTableInfoSlice] = useState(false);
     const { tableName, tableId } = useLocalSearchParams();
-    const { loading , tabledish, error } = useSelector(
+    const { loading , tabledish } = useSelector(
         (state: RootState) => state.tableDishStore ,
         shallowEqual
     );
+
     useEffect(() => {
         dispatch(tabledishAction.getTableDishData(Number(tableId)));
     }, [tableId]);
@@ -376,7 +376,7 @@ export default function FoodListScreen() {
             <Dishmodal
                 visible={modalDishVisible}
                 onClose={() => setModalDishVisible(false)}
-                onSelectArea={(id, name) => console.log('Selected:', id, name)}
+                onItemPress={ (item: IDish) => console.log(item) }
             />
 
         </Container>

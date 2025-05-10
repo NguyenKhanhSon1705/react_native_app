@@ -1,23 +1,31 @@
+import { IDishData } from '@/interfaces/dish/dishType';
 import { IDish } from '@/interfaces/tabledish/tabledishType';
-import React, { useState } from 'react';
+import formatCurrency from '@/utils/functions/formatCurrency';
+import React, { useEffect, useRef, useState } from 'react';
 import {
     FlatList,
     Text,
     View,
     Image,
     TouchableOpacity,
-    Button,
     StyleSheet,
 } from 'react-native';
+import { Button } from 'react-native-paper';
 
 interface Props {
-    data: any;
+    data: IDishData;
+    onIsScrollEnd?: (isScrollEnd: boolean) => void;
     onSubmit: (selectedItems: IDish[]) => void;
 }
 
-const DishViewList: React.FC<Props> = ({ data, onSubmit }) => {
+const DishViewList: React.FC<Props> = ({ data, onSubmit, onIsScrollEnd }) => {
     const [selectedItems, setSelectedItems] = useState<IDish[]>([]);
+    const isFetching = useRef(false);
 
+    /*
+        description: handle select item in component DishViewList
+        @param item IDish
+    */
     const handleSelectItem = (item: IDish) => {
         const isSelected = selectedItems.some((selected) => selected.id === item.id);
         if (isSelected) {
@@ -31,22 +39,12 @@ const DishViewList: React.FC<Props> = ({ data, onSubmit }) => {
         onSubmit(selectedItems);
     };
 
-    const handleScroll = ({ layoutMeasurement, contentOffset, contentSize }: any) => {
-        const paddingToBottom = 20; // Khoảng cách gần cuối danh sách
-        if (
-            layoutMeasurement.height + contentOffset.y >=
-            contentSize.height - paddingToBottom
-        ) {
-            console.log('Gần đến cuối danh sách!');
-        }
-    };
-
     return (
         <View style={styles.container}>
             <FlatList
-                data={data}
+                data={data.items as any}
                 keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item }) => {
+                renderItem={({ item }: { item: IDish }) => {
                     const isSelected = selectedItems.some((selected) => selected.id === item.id);
                     return (
                         <TouchableOpacity
@@ -60,22 +58,25 @@ const DishViewList: React.FC<Props> = ({ data, onSubmit }) => {
                                 source={
                                     item.image
                                         ? { uri: item.image }
-                                        : require('@/assets/logo1.png') // Hình ảnh mặc định
+                                        : require('@/assets/avatar-default.png')
                                 }
                                 style={styles.image}
                             />
                             <View style={styles.infoContainer}>
                                 <Text style={styles.dishName}>{item.dish_Name}</Text>
                                 <Text style={styles.unitName}>{item.unit_Name}</Text>
-                                <Text style={styles.price}>{item.selling_Price} đ</Text>
+                                <Text style={styles.price}>{formatCurrency.formatCurrencyVN(item.selling_Price)} đ</Text>
                             </View>
                         </TouchableOpacity>
                     );
                 }}
-                onScroll={({ nativeEvent }) => handleScroll(nativeEvent)}
+                onEndReached={() => {
+                    onIsScrollEnd && onIsScrollEnd(true);
+                }}
+                onEndReachedThreshold={0.3}
                 contentContainerStyle={{ paddingBottom: 20 }}
             />
-            <Button title="Submit" onPress={handleSubmit} />
+            <Button textColor='#fff' style={styles.btnSubmit} onPress={handleSubmit} >Thêm món ăn</Button>
         </View>
     );
 };
@@ -91,15 +92,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 10,
         marginBottom: 10,
-        backgroundColor: '#ccc',
+        backgroundColor: '#ffff',
         borderRadius: 8,
         elevation: 2,
         borderWidth: 1,
-        borderColor: 'transparent',
+        borderColor: '#d3d1d1',
     },
     selectedItem: {
-        backgroundColor: '#ff8c47',
-        borderWidth: 2,
+        backgroundColor: '#f4e6dd',
     },
     image: {
         width: 60,
@@ -113,16 +113,24 @@ const styles = StyleSheet.create({
     dishName: {
         fontSize: 16,
         fontWeight: 'bold',
-        color: '#fff',
+        color: '#000',
     },
     unitName: {
         fontSize: 14,
-        color: '#666',
+        color: '#000',
     },
     price: {
         fontSize: 14,
-        color: '#ff8c47',
+        color: 'red',
     },
+    btnSubmit: {
+        backgroundColor: '#ff8c47',
+        borderRadius: 5,
+        paddingVertical: 6,
+        marginTop: 10,
+        fontWeight: 'bold',
+
+    }
 });
 
 export default DishViewList;
