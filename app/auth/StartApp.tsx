@@ -7,6 +7,7 @@ import { useTranslate } from "@/utils/hooks/useTranslate";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/stores";
+
 const StartApp = () => {
     const textConfig = useTranslate();
     const isAuthenticated = useSelector(
