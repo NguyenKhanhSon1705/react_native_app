@@ -20,9 +20,11 @@ import {
   AreaData,
 } from "@/interfaces/area/AreaTypes";
 import { transparent } from "react-native-paper/lib/typescript/styles/themes/v2/colors";
+import { useTranslate } from "@/utils/hooks/useTranslate";
 
 const AreaScreen = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const language = useTranslate();
   const [selectedArea, setSelectedArea] = useState<AreaData | null>(null);
   const [isOptionsModalVisible, setIsOptionsModalVisible] = useState(false);
   const [isAreaModalVisible, setIsAreaModalVisible] = useState(false);
@@ -94,9 +96,9 @@ const AreaScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
-        <Text style={styles.sectionTitle}>Danh sách khu vực</Text>
+        <Text style={styles.sectionTitle}>{language("00020")}</Text>
         <TouchableOpacity style={styles.addButton} onPress={handleAddNew}>
-          <Text style={styles.addButtonText}>Thêm mới</Text>
+          <Text style={styles.addButtonText}>{language("00019")}</Text>
         </TouchableOpacity>
       </View>
 

@@ -9,7 +9,7 @@ import { Provider } from "react-redux";
 import { store } from "@/stores";
 import React from "react";
 
-export default function _layout() {
+export default function _Layout() {
   return (
     <SafeAreaProvider>
       <PaperProvider>
