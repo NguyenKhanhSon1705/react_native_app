@@ -18,5 +18,7 @@ const translations : Record<string,Record<string,string>> = {
     '00016': {vi: 'Mật khẩu ít nhất 6 ký tự' , en: 'Password at least 6 characters' , ja: ''},
     '00017': {vi: 'Trở lại' , en: 'Back' , ja: ''},
     '00018': {vi: 'Thông báo' , en: 'Notication' , ja: ''},
+    '00019': {vi: 'Thêm mới' , en: 'New' , ja: ''},
+    '00020': {vi: 'Danh sách khu vực' , en: 'List area' , ja: ''},
 }
 export default translations

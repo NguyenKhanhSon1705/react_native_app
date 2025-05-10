@@ -74,12 +74,11 @@ const TableScreen = () => {
       dispatch(
         tableAction.updateTable({ id: tableId, areaId, nameTable } as ITableRequest)
       );
-      setHighlightedTableId(tableId); // Đánh dấu bàn vừa được cập nhật
+      setHighlightedTableId(tableId);
     } else {
       dispatch(
         tableAction.addTable({ areaId, nameTable } as ITableRequest)
       );
-      // Giả sử backend trả về ID mới, có thể set lại highlighted sau khi nhận WebSocket
     }
     closeTableModal();
   };
