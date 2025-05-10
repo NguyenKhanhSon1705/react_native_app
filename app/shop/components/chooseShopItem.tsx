@@ -3,10 +3,10 @@ import React, { useState } from "react";
 import { FC } from "react";
 import { Image, Text, View, TouchableOpacity } from "react-native";
 import { Button } from "react-native-paper";
-import styled from "styled-components";
+import styled from "styled-components/native";
 import ShopOptionModal from "./ShopOptionModal";
 
-const Container = styled(View)`
+const Container =  styled.View`
   padding: 12px;
   background-color: #ffffff;
   border-radius: 16px;
@@ -16,12 +16,12 @@ const Container = styled(View)`
   margin: 8px 16px;
 `;
 
-const ContainerAvt = styled(View)`
+const ContainerAvt =  styled.View`
   flex-direction: row;
   align-items: center;
 `;
 
-const AvatarContainer = styled(View)`
+const AvatarContainer =  styled.View`
   width: 90px;
   height: 90px;
   border-radius: 12px;
@@ -29,18 +29,18 @@ const AvatarContainer = styled(View)`
   margin-right: 12px;
 `;
 
-const ContainerInfo = styled(View)`
+const ContainerInfo =  styled.View`
   flex: 1;
 `;
 
-const InfoHeader = styled(View)`
+const InfoHeader =  styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 6px;
 `;
 
-const Tag = styled(Text)`
+const Tag = styled.Text`
   background-color: #fce8e6;
   color: #e53935;
   font-size: 12px;
@@ -50,12 +50,12 @@ const Tag = styled(Text)`
   overflow: hidden;
 `;
 
-const Rating = styled(View)`
+const Rating =  styled.View`
   flex-direction: row;
   align-items: center;
 `;
 
-const Star = styled(Text)`
+const Star = styled.Text`
   color: #fbc02d;
   margin-right: 4px;
   font-weight: bold;

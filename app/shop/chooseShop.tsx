@@ -1,6 +1,5 @@
 import { FC, useEffect, useState } from "react";
 import { TouchableOpacity, View, Alert } from "react-native";
-import styled from "styled-components";
 import ChooseShopItem from "./components/chooseShopItem";
 import { useRouter } from "expo-router";
 
@@ -18,13 +17,14 @@ import ShopModal from "./components/ShopModal";
 import PasswordConfirmModal from "./components/PasswordConfirmModal";
 import { createImageFormData } from "@/utils/functions/createImageFormData";
 import LoadingOverlay from "@/components/loadingrotate";
+import styled from "styled-components/native";
 
 const Container = styled(SafeAreaView)`
     flex: 1;
     background-color: #F5F7FA; 
 `;
 
-const ContainerHeader = styled(View)`
+const ContainerHeader = styled.View`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -36,7 +36,7 @@ const ContainerHeader = styled(View)`
 const ChooseShop: FC = () => {
     const router = useRouter();
     const dispatch = useDispatch<AppDispatch>();
-    const { shops: shopData, loading } = useSelector((state: RootState) => state.shopStore);
+    const { shops: shopData, loading } = useSelector((state: RootState) => state.shopStore as { shops: IShopData[]; loading: boolean });
     const [modalVisible, setModalVisible] = useState(false);
     const [editShop, setEditShop] = useState<IShopData | undefined>(undefined);
     const [passwordModalVisible, setPasswordModalVisible] = useState(false);

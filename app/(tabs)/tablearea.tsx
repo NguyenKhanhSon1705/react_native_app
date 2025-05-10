@@ -20,7 +20,11 @@ const TableArea = () => {
     const {loading , error , tablearea} = useSelector(
         (state: RootState) => state.tableAreaStore,
         shallowEqual
-    );
+    ) as {
+        loading: boolean;
+        error: string | null;
+        tablearea: ITableAreaData[];
+    };
 
     useEffect(() => {
         if (!activeArea.areaId) return;
@@ -82,7 +86,7 @@ const TableArea = () => {
                     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                 }
             >
-                {tablearea.map((item: ITableAreaData, index) => (
+                {tablearea.map((item: ITableAreaData, index: any) => (
                     <Pressable
                         key={index}
                         onPress={() => handleSelectTable(item)}

@@ -17,12 +17,12 @@ import Dishmodal from "@/components/tabledish/dishmodal";
 import LoadingOverlay from "@/components/loadingrotate";
 import TotalTableInfoSlice from "@/components/tabledish/totalTableInfoSlice";
 
-const Container = styled(View)`
+const Container = styled.View`
   flex: 1;
   background-color: #f2f2f2;
   padding-top: 50px;
 `;
-const FoodCard = styled(Animatable.View)`
+const FoodCard = styled.View`
   background-color: #fff;
   flex-direction: row;
   padding: 14px;
@@ -31,25 +31,25 @@ const FoodCard = styled(Animatable.View)`
   
 `;
 
-const FoodImage = styled(Image)`
+const FoodImage = styled.Image`
   width: 100px;
   height: 100px;
   border-radius: 8px;
   padding: 2px  ;
 `;
 
-const Info = styled(View)`
+const Info = styled.View`
   flex: 1;
   margin-left: 12px;
 `;
 
-const FoodName = styled(Text)`
+const FoodName = styled.Text`
   font-weight: bold;
   font-size: 16px;
   color: #333;
 `;
 
-const Tag = styled(Text)`
+const Tag = styled.Text`
   font-size: 12px;
   background-color: #ffe6e6;
   color: #ff6b6b;
@@ -59,24 +59,24 @@ const Tag = styled(Text)`
   margin-top: 4px;
 `;
 
-const PriceRating = styled(View)`
+const PriceRating = styled.View`
   flex-direction: row;
   justify-content: space-between;
   margin-top: 6px;
 `;
 
-const Rating = styled(Text)`
+const Rating = styled.Text`
   font-size: 13px;
   color: #ff9800;
 `;
 
-const Price = styled(Text)`
+const Price = styled.Text`
   font-size: 14px;
   font-weight: bold;
   color: #f00909;
 `;
 
-const HiddenRow = styled(View)`
+const HiddenRow = styled.View`
   align-items: flex-end;
   justify-content: center;
   flex: 1;
@@ -96,8 +96,8 @@ export default function FoodListScreen() {
     const [modalDishVisible, setModalDishVisible] = useState(false);
     const [modalTotalTableInfoSlice, setModalTotalTableInfoSlice] = useState(false);
     const { tableName, tableId } = useLocalSearchParams();
-    const { loading, tabledish, error } = useSelector(
-        (state: RootState) => state.tableDishStore,
+    const { loading , tabledish, error } = useSelector(
+        (state: RootState) => state.tableDishStore ,
         shallowEqual
     );
     useEffect(() => {

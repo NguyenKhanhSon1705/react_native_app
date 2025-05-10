@@ -10,7 +10,7 @@ interface Props {
     shopName: string;
 }
 
-const Container = styled(View)`
+const Container = styled.View`
     flex: 1;
     background-color: rgba(0, 0, 0, 0.5);
     justify-content: center;
@@ -18,21 +18,21 @@ const Container = styled(View)`
     padding: 0 16px;
 `;
 
-const ModalContent = styled(View)`
+const ModalContent = styled.View`
     background-color: white;
     width: 100%;
     border-radius: 16px;
     padding: 20px;
 `;
 
-const ModalHeader = styled(View)`
+const ModalHeader =  styled.View`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 24px;
 `;
 
-const Title = styled(Text)`
+const Title = styled.Text`
     font-size: 20px;
     font-weight: bold;
     color: #2c2c2c;
@@ -42,13 +42,13 @@ const CloseButton = styled(TouchableOpacity)`
     padding: 4px;
 `;
 
-const Message = styled(Text)`
+const Message = styled.Text`
     color: #666;
     font-size: 16px;
     margin-bottom: 20px;
 `;
 
-const Input = styled(TextInput)`
+const Input = styled.TextInput`
     background-color: #f5f5f5;
     border-radius: 8px;
     padding: 12px;
@@ -56,7 +56,7 @@ const Input = styled(TextInput)`
     font-size: 16px;
 `;
 
-const ButtonContainer = styled(View)`
+const ButtonContainer =  styled.View`
     flex-direction: row;
     justify-content: flex-end;
     gap: 12px;
@@ -77,7 +77,7 @@ const ConfirmButton = styled(Button)`
     background-color: #ff4444;
 `;
 
-const ButtonText = styled(Text)<{ isConfirm?: boolean }>`
+const ButtonText = styled.Text<{ isConfirm?: boolean }>`
     font-size: 16px;
     font-weight: 500;
     color: ${props => props.isConfirm ? 'white' : '#666'};

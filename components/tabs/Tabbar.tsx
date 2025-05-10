@@ -1,9 +1,9 @@
 import { View, Dimensions, Animated } from "react-native";
-import styled from "styled-components";
 import TabbarBottonEven from "./TabbarBottomEven";
 import React, { useEffect, useRef } from "react";
+import styled from "styled-components/native";
 
-const Container = styled(View)`
+const Container = styled.View`
     position: absolute;
     bottom: 0;
     flex-direction: row;

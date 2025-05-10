@@ -1,6 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
 import tableAction from "./tableThunk";
 import { ITableData } from "@/interfaces/table.ts/TableTypes";
+import { createSlice } from "@reduxjs/toolkit";
 import Toast from "react-native-toast-message";
 interface tableState {
     tables: ITableData[];

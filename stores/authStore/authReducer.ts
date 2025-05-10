@@ -1,7 +1,7 @@
 import ICurrentUser from "@/interfaces/auth/currentUserType";
 import accessToken from "@/utils/functions/accessToken";
-import { createSlice } from "@reduxjs/toolkit";
 import authThunks from "./authThunks";
+import { createSlice } from "@reduxjs/toolkit";
 
 
 export interface AuthState {

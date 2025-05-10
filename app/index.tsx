@@ -9,15 +9,15 @@ import routes_path from "@/routes/routes_path";
 import React from "react";
 
 export default function Page() {
-  const rootNavigation = useRootNavigationState();
+  // const rootNavigation = useRootNavigationState();
 
-  useEffect(() => {
-      if (!rootNavigation?.key) return; // Chưa sẵn sàng
+  // useEffect(() => {
+  //     if (!rootNavigation?.key) return; // Chưa sẵn sàng
 
-      if (accessToken.getAccessToken()) {
-          router.push(routes_path.TABLEAREA);
-      }
-  }, [rootNavigation]);
+  //     if (accessToken.getAccessToken()) {
+  //         router.push(routes_path.TABLEAREA);
+  //     }
+  // }, [rootNavigation]);
   return (
       <ThemeProvider>
         <SafeAreaView style={{ flex: 1 }}>

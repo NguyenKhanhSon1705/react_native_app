@@ -1,14 +1,20 @@
 import { StyleSheet, Text, View } from "react-native"
 import { Avatar, Button } from "react-native-paper";
-import { useNavigation, useRootNavigationState, useRouter } from "expo-router";
+import { router} from "expo-router";
 import logo from '../../assets/logo1.png';
 import routes_path from "@/routes/routes_path";
 import { useTranslate } from "@/utils/hooks/useTranslate";
+import React from "react";
+import Toast from "react-native-toast-message";
 const StartApp = () => {
-    const router = useRouter()
     const textConfig = useTranslate();
    
     const nextPage = () => {
+        Toast.show({
+            text1: textConfig("00018"),
+            text2: textConfig("00019"),
+            type: "success",
+        })
         router.push(routes_path.LOGIN)
     }
     return (

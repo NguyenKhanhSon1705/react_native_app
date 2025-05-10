@@ -7,8 +7,8 @@ import { ITableAreaData } from "@/interfaces/tablearea/tableareaType";
 import Toast from "react-native-toast-message";
 
 export const useTableAreaWebsocket = (areaId?: string | number) => {
-    const connectionRef = useRef<signalR.HubConnection | null>(null);
-    const isStartedRef = useRef(false); // ✅ Flag kiểm tra đã start chưa
+    const connectionRef = useRef<ReturnType<typeof WsConnect> | null>(null);
+    const isStartedRef = useRef(false);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -57,7 +57,7 @@ export const useTableAreaWebsocket = (areaId?: string | number) => {
                 if (isStartedRef.current) {
                     conn.stop()
                         .then(() => console.log("SignalR connection stopped"))
-                        .catch((err) =>
+                        .catch((err : any) =>
                             console.error("Error stopping SignalR connection:", err)
                         );
                 }

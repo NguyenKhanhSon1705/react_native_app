@@ -112,7 +112,7 @@ const Area = ({ visible, onClose, onSelectArea }: Props) => {
                 <Surface style={styles.drawerSurface}>
                     <Drawer.Section
                         title="Danh sách khu vực" showDivider={false}>
-                        {areaList.map((area) => (
+                        {areaList.map((area:any) => (
                             <Button
                                 key={area.id}
                                 mode='outlined'

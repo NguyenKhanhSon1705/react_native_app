@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit'
 import { authSlice } from './authStore/authReducer';
 import { shopReducer } from './shopStore/shopReducer';
 import { areaReducer } from './areaStore/areaReducer';

@@ -6,7 +6,7 @@ import { FlatList, ScrollView, Text, View } from "react-native"
 import { Checkbox, TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context"
 import { useDispatch, useSelector } from "react-redux";
-import styled from "styled-components";
+import styled from "styled-components/native";
 
 const SearchInput = styled(TextInput)`
   border: 1px solid #ccc;
@@ -17,7 +17,7 @@ const SearchInput = styled(TextInput)`
   background-color: #fff;
 `;
 
-const ItemRow = styled(View)`
+const ItemRow = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
@@ -26,7 +26,7 @@ const ItemRow = styled(View)`
   border-bottom-color: #eee;
 `;
 
-const ItemText = styled(Text)`
+const ItemText = styled.Text`
   font-size: 16px;
   color: #333;
 `;

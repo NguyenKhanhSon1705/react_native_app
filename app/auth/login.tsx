@@ -1,24 +1,25 @@
 
 import { Platform, Text, TouchableWithoutFeedback, View } from "react-native"
-import styled from "styled-components";
+import styled from "styled-components/native";
 import FormLogin from "./components/FormLogin";
 import { FontAwesome } from "@expo/vector-icons";
 import Languages from "@/components/languages";
 import { useEffect } from "react";
 import { useTranslate } from "@/utils/hooks/useTranslate";
 import { COLORS } from "@/themes/ThemeGlobal";
-const Container = styled(View)`
+import React from "react";
+const Container = styled.View`
     position: relative;
     flex: 1;
     width: 100%;
 `
-const ContainerHead = styled(View)`
+const ContainerHead = styled.View`
     height: 40%;
     background-color: #121223;
     justify-content: center;
     align-items: center;
 `
-const ContainerBody = styled(View)`
+const ContainerBody =  styled.View`
      position: absolute;
         top: 30%;
         left: 0;
@@ -29,18 +30,18 @@ const ContainerBody = styled(View)`
         border-top-right-radius: 30px;
         border-top-left-radius: 30px;
 `
-const ContainerBodyFooter = styled(View)`
+const ContainerBodyFooter =  styled.View`
     margin-top: 30px;
     align-items: center;
     justify-content: center;
 `
-const ContainerIcon = styled(View)`
+const ContainerIcon =  styled.View`
     display: flex;
     flex-direction: row;
 `
-const BoxIcon = styled(View) <{ bgColor?: string }>`
+const BoxIcon =  styled.View <{ bgColor?: string }>`
     margin: 12px 12px;
-    background-color:${(props) => props.bgColor || "blue"};
+    background-color:${(props:any) => props.bgColor || "blue"};
     width: 60px;
     height:60px;
     border-radius: 50%;
@@ -48,7 +49,7 @@ const BoxIcon = styled(View) <{ bgColor?: string }>`
     align-items: center;
     justify-content: center;
 `
-const ContainerLanguage = styled(View)`
+const ContainerLanguage =  styled.View`
     position: absolute;
     top: ${Platform.OS === 'ios' ? '40px' : '30px'};
     right: 20px;

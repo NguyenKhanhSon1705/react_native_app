@@ -1,7 +1,8 @@
-import { createSlice } from "@reduxjs/toolkit";
+
 import { ITableAreaData } from "@/interfaces/tablearea/tableareaType";
 import tabledishAction from "./tabledishThunk";
 import { ITableDishData } from "@/interfaces/tabledish/tabledishType";
+import { createSlice } from "@reduxjs/toolkit";
 interface tableState {
     tabledish: ITableDishData;
     loading: boolean;

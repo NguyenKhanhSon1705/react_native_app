@@ -18,7 +18,7 @@ const TableScreen = () => {
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
   const [highlightedTableId, setHighlightedTableId] = useState<number | null>(null);
 
-  const tableList = useSelector((state: RootState) => state.tableStore.tables);
+  const tableList = useSelector((state: RootState) => state.tableStore.tables as ITableData[]);
 
   useEffect(() => {
     dispatch(tableAction.getTableData());
