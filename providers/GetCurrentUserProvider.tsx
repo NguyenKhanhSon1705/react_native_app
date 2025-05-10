@@ -1,6 +1,6 @@
 import { authAction } from "@/stores/authStore/authReducer";
 import accessToken from "@/utils/functions/accessToken";
-import { useEffect } from "react";
+import { JSX, useEffect } from "react";
 import { useDispatch } from "react-redux";
 const GetCurrentUserProvider = ({ children }: { children: JSX.Element }) => {
     // const accToken = accessToken.getAccessToken();
