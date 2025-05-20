@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, Image, TouchableOpacity, TextInput, Alert } from "react-native";
+import { Text, View, Image, TouchableOpacity, TextInput, Alert, Modal } from "react-native";
 import styled from "styled-components/native";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { Button, IconButton } from "react-native-paper";
@@ -16,6 +16,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import Dishmodal from "@/components/tabledish/dishmodal";
 import LoadingOverlay from "@/components/loadingrotate";
 import TotalTableInfoSlice from "@/components/tabledish/totalTableInfoSlice";
+import { set } from "date-fns";
 
 const Container = styled.View`
   flex: 1;
@@ -25,17 +26,19 @@ const Container = styled.View`
 const FoodCard = styled.View`
   background-color: #fff;
   flex-direction: row;
-  padding: 14px;
+  padding: 8px;
   margin: 8px 16px;
-  border-radius: 16px;
+  border-radius: 10px;
+  border-color: #ccc;
+  border-width: 1px;
   
 `;
 
 const FoodImage = styled.Image`
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   border-radius: 8px;
-  padding: 2px  ;
+  padding: 2px;
 `;
 
 const Info = styled.View`
@@ -91,12 +94,14 @@ const ButtonCustom = styled(Button)`
 export default function FoodListScreen() {
     const dispatch = useDispatch<AppDispatch>();
     const [isBtnUpdate, setIsBtnUpdate] = useState<boolean>(false);
-    const [foods, setFoods] = useState<IDish[] | undefined>();
+    const [foods, setFoods] = useState<IDish[] | []>([]);
     const [modalDishVisible, setModalDishVisible] = useState(false);
     const [modalTotalTableInfoSlice, setModalTotalTableInfoSlice] = useState(false);
     const { tableName, tableId } = useLocalSearchParams();
-    const { loading , tabledish } = useSelector(
-        (state: RootState) => state.tableDishStore ,
+    const [abortModalVisible, setAbortModalVisible] = useState(false);
+    const [abortReason, setAbortReason] = useState("");
+    const { loading, tabledish } = useSelector(
+        (state: RootState) => state.tableDishStore,
         shallowEqual
     );
 
@@ -105,7 +110,8 @@ export default function FoodListScreen() {
     }, [tableId]);
 
     useEffect(() => {
-        setFoods(tabledish?.dish);
+        setFoods(tabledish?.dish || []);
+        console.log("tabledish", tabledish);
         if (tabledish.isActive) {
             setIsBtnUpdate(true);
         }
@@ -142,22 +148,134 @@ export default function FoodListScreen() {
     }
 
     const handleUpdate = () => {
-
+        Alert.alert(
+            "Xác nhận",
+            "Bạn có muốn thêm bàn này không?",
+            [
+                {
+                    text: "Không",
+                    style: "cancel",
+                },
+                {
+                    text: "Có",
+                    onPress: () => {
+                        dispatch(
+                            tabledishAction.updateTableDish({
+                                tableId: Number(tableId),
+                                listDishId: foods.map((food) => ({
+                                    key: food.id,
+                                    selling_Price: food.selling_Price,
+                                    quantity: food.quantity,
+                                    notes: "food.notes"
+                                }))
+                            })
+                        );
+                    },
+                },
+            ],
+            { cancelable: false }
+        );
     }
     const handleCreate = () => {
-
+        Alert.alert(
+            "Xác nhận",
+            "Bạn có muốn thêm bàn này không?",
+            [
+                {
+                    text: "Không",
+                    style: "cancel",
+                },
+                {
+                    text: "Có",
+                    onPress: () => {
+                        setIsBtnUpdate(true);
+                        dispatch(
+                            tabledishAction.createTableDish({
+                                tableId: Number(tableId),
+                                listDishId: foods.map((food) => ({
+                                    key: food.id,
+                                    selling_Price: food.selling_Price,
+                                    quantity: food.quantity,
+                                    notes: "food.notes"
+                                }))
+                            })
+                        );
+                    },
+                },
+            ],
+            { cancelable: false }
+        );
     }
     const handleChangeTable = () => {
 
     }
     const handleAbortTable = () => {
-
+        setAbortModalVisible(true);
     }
     const handlePayment = () => {
 
     };
+    const handleConfirmAbort = () => {
+        // Xử lý logic abort ở đây, ví dụ gửi abortReason lên server hoặc Redux
+        Alert.alert("Đã hủy bàn", `Lý do: ${abortReason}`);
+        setAbortModalVisible(false);
+        setAbortReason("");
+        setIsBtnUpdate(false);
+        setFoods([]);
+        dispatch(
+            tabledishAction.abortTableDish({
+                table_Id: Number(tableId),
+                reason_abort: abortReason,
+                total_money: foods.reduce((total, food) => total + food.selling_Price * food.quantity, 0),
+                total_quantity: foods.reduce((total, food) => total + food.quantity, 0),
+            })
+        );
+    };
     return (
         <Container>
+            <Modal
+                visible={abortModalVisible}
+                transparent
+                animationType="slide"
+                onRequestClose={() => setAbortModalVisible(false)}
+            >
+                <View style={{
+                    flex: 1,
+                    backgroundColor: "rgba(0,0,0,0.3)",
+                    justifyContent: "center",
+                    alignItems: "center"
+                }}>
+                    <View style={{
+                        backgroundColor: "#fff",
+                        padding: 20,
+                        borderRadius: 10,
+                        width: "80%"
+                    }}>
+                        <Text style={{ fontWeight: "bold", fontSize: 16, marginBottom: 10 }}>Nhập lý do hủy bàn</Text>
+                        <TextInput
+                            placeholder="Nhập lý do..."
+                            value={abortReason}
+                            onChangeText={setAbortReason}
+                            style={{
+                                borderWidth: 1,
+                                borderColor: "#ccc",
+                                borderRadius: 6,
+                                padding: 8,
+                                marginBottom: 16
+                            }}
+                        />
+                        <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+                            <Button onPress={() => setAbortModalVisible(false)}>Đóng</Button>
+                            <Button
+                                onPress={handleConfirmAbort}
+                                disabled={!abortReason.trim()}
+                            >Xác nhận</Button>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+
+
             {loading && <LoadingOverlay message="Đang tải..." />}
             <View
                 style={{
@@ -232,10 +350,16 @@ export default function FoodListScreen() {
             </View>
             <SwipeListView
                 data={foods}
-                keyExtractor={(item) => item.id.toString()}
+                keyExtractor={(item) => item.id.toString() ?? item.dish_Name}
                 renderItem={({ item }) => (
                     <FoodCard animation="fadeInUp" duration={400}>
-                        <FoodImage source={{ uri: item.image }} />
+                        <FoodImage
+                            source={
+                                item.image
+                                    ? { uri: item.image }
+                                    : require('@/assets/avatar-default.png')
+                            }
+                        />
                         <Info>
                             <FoodName>{item.dish_Name}</FoodName>
                             <View
@@ -251,7 +375,7 @@ export default function FoodListScreen() {
                                     onPress={() => handleQuantityChange(item.id, Math.max(item.quantity - 1, 1))}
                                 />
                                 <TextInput
-                                    value={item.quantity.toString()}
+                                    value={item.quantity.toString() ?? ""}
                                     keyboardType="numeric"
                                     onChangeText={(value) => handleQuantityChange(item.id, Math.max(Number(value), 1))}
                                     style={{
@@ -273,7 +397,6 @@ export default function FoodListScreen() {
                                 <Rating>⭐ 4.9 (10 Review)</Rating>
                                 <Price>{formatCurrency.formatCurrencyVN(item.selling_Price)} đ</Price>
                             </PriceRating>
-                            {/* Thêm chức năng tăng/giảm số lượng */}
                             <View style={{
                                 flexDirection: "row",
                                 alignItems: "center",
@@ -302,7 +425,7 @@ export default function FoodListScreen() {
                 previewOpenDelay={300}
             />
             <TotalTableInfoSlice
-            table={tabledish}
+                table={tabledish}
                 visible={modalTotalTableInfoSlice}
                 onClose={() => setModalTotalTableInfoSlice(false)}
             />
@@ -324,25 +447,39 @@ export default function FoodListScreen() {
                 }}
             >
                 <View>
-                    <ButtonCustom
-                        mode="contained"
-                        icon={"plus"}
-                        style={{
-                            backgroundColor: "#07b80d",
-                        }}
-                        textColor="#fff"
-                        contentStyle={{ justifyContent: 'flex-start' }}
-                        onPress={handleUpdate}
-                    >{isBtnUpdate ? "Cập nhật" : "Tạo bàn"}</ButtonCustom>
+                    {
+                        isBtnUpdate ? <ButtonCustom
+                            mode="contained"
+                            icon={"plus"}
+                            style={{
+                                backgroundColor: "#5CB338",
+                            }}
+                            textColor="#fff"
+                            contentStyle={{ justifyContent: 'flex-start' }}
+                            onPress={() => handleUpdate()}
+                        >Cập nhật</ButtonCustom> :
+                            <ButtonCustom
+                                mode="contained"
+                                icon={"plus"}
+                                style={{
+                                    backgroundColor: "#5CB338",
+                                }}
+                                textColor="#fff"
+                                contentStyle={{ justifyContent: 'flex-start' }}
+                                onPress={() => handleCreate()}
+                            >Tạo bàn</ButtonCustom>
+
+                    }
+
                     <ButtonCustom
                         icon={"autorenew"}
                         mode="contained"
                         style={{
-                            backgroundColor: "#f38910",
+                            backgroundColor: "#FA812F",
                         }}
                         textColor="#fff"
                         contentStyle={{ justifyContent: 'flex-start' }}
-                        onPress={handleChangeTable}
+                        onPress={() => handleChangeTable()}
                     >Chuyển bàn</ButtonCustom>
 
                 </View>
@@ -351,18 +488,18 @@ export default function FoodListScreen() {
                         mode="contained"
                         icon={"contactless-payment"}
                         style={{
-                            backgroundColor: "#3008f8",
+                            backgroundColor: "#4E71FF",
                         }}
                         textColor="#fff"
                         contentStyle={{ justifyContent: 'flex-start' }}
-                        onPress={handlePayment}
+                        onPress={() => handlePayment()}
                     >Thanh toán</ButtonCustom>
                     <ButtonCustom
                         mode="contained"
 
                         icon={"close"}
                         style={{
-                            backgroundColor: "#f80808",
+                            backgroundColor: "#FF0B55",
                         }}
                         textColor="#fff"
                         contentStyle={{ justifyContent: 'flex-start' }}
@@ -376,7 +513,34 @@ export default function FoodListScreen() {
             <Dishmodal
                 visible={modalDishVisible}
                 onClose={() => setModalDishVisible(false)}
-                onItemPress={ (item: IDish) => console.log(item) }
+                onItemPress={(items?: IDish[]) => {
+                    const newItems = items ?? [];
+
+                    setFoods(prevFoods => {
+                        const updatedFoods = [...prevFoods];
+
+                        for (const newItem of newItems) {
+                            const index = updatedFoods.findIndex(food => food.id === newItem.id);
+
+                            if (index !== -1) {
+                                // Món đã tồn tại → tăng quantity
+                                updatedFoods[index] = {
+                                    ...updatedFoods[index],
+                                    quantity: updatedFoods[index].quantity + 1,
+                                };
+                            } else {
+                                // Món chưa có → thêm mới với quantity = 1
+                                updatedFoods.push({
+                                    ...newItem,
+                                    quantity: 1,
+                                });
+                            }
+                        }
+
+                        return updatedFoods;
+                    });
+                }}
+
             />
 
         </Container>
