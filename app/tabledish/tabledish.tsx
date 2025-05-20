@@ -90,6 +90,20 @@ const ButtonCustom = styled(Button)`
     margin-top: 4px;
     margin-bottom: 4px;
 `
+const renderButton = (label : any, icon: any, backgroundColor: any, onPress: any , isDisable:boolean) => (
+    <ButtonCustom
+        mode="contained"
+        icon={icon}
+        style={{ backgroundColor }}
+        textColor="#fff"
+        contentStyle={{ justifyContent: 'flex-start' }}
+        onPress={onPress}
+        disabled={isDisable}
+    >
+        {label}
+    </ButtonCustom>
+);
+
 
 export default function FoodListScreen() {
     const dispatch = useDispatch<AppDispatch>();
@@ -446,7 +460,7 @@ export default function FoodListScreen() {
                     zIndex: 100
                 }}
             >
-                <View>
+                {/* <View>
                     {
                         isBtnUpdate ? <ButtonCustom
                             mode="contained"
@@ -506,9 +520,22 @@ export default function FoodListScreen() {
                         onPress={handleAbortTable}
                     >Hủy bàn</ButtonCustom>
 
+                </View> */}
+
+                <View>
+                    {
+                        isBtnUpdate
+                            ? renderButton("Cập nhật", "plus", "#5CB338", handleUpdate , false)
+                            : renderButton("Tạo bàn", "plus", "#5CB338", handleCreate  , false)
+                    }
+
+                    {renderButton("Chuyển bàn", "autorenew", "#FA812F", handleChangeTable , !isBtnUpdate)}
                 </View>
 
-
+                <View>
+                    {renderButton("Thanh toán", "contactless-payment", "#4E71FF", handlePayment , !isBtnUpdate)}
+                    {renderButton("Hủy bàn", "close", "#FF0B55", handleAbortTable , !isBtnUpdate)}
+                </View>
             </View>
             <Dishmodal
                 visible={modalDishVisible}
