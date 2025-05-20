@@ -20,7 +20,6 @@ interface Props {
 
 const DishViewList: React.FC<Props> = ({ data, onSubmit, onIsScrollEnd }) => {
     const [selectedItems, setSelectedItems] = useState<IDish[]>([]);
-    const isFetching = useRef(false);
 
     /*
         description: handle select item in component DishViewList
