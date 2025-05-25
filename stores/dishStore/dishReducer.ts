@@ -35,6 +35,7 @@ const dishSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload as string;
             })
+            
         builder
             .addCase(dishAction.getDishInfoPaging.pending, (state) => {
                 state.loading = true;

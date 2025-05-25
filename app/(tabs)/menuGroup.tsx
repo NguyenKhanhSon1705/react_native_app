@@ -79,13 +79,12 @@ const MenuGroupScreen = () => {
     closeOptionsModal();
   };
 
-  const handleSaveMenuGroup = (id: number | undefined, name: string, description: string) => {
-    // const menuGroupRequest: IMenuGroup = { id, name, description };
-    // if (id) {
-    //   dispatch(menuGroupAction.updateMenuGroup(menuGroupRequest as IMenuGroup));
-    // } else {
-    //   dispatch(menuGroupAction.addMenuGroup(menuGroupRequest as IMenuGroup));
-    // }
+  const handleSaveMenuGroup = (menuGroup: Partial<IMenuGroup>) => {
+    if (menuGroup.id) {
+      dispatch(menuGroupAction.updateMenuGroup(menuGroup as IMenuGroup));
+    } else {
+      dispatch(menuGroupAction.addMenuGroup(menuGroup as IMenuGroup));
+    }
     closeMenuGroupModal();
   };
 
@@ -118,7 +117,6 @@ const MenuGroupScreen = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Search and Filter Inputs */}
       <View style={styles.filterContainer}>
         <TextInput
           style={styles.searchInput}
@@ -127,6 +125,7 @@ const MenuGroupScreen = () => {
           onChangeText={setSearch}
         />
       </View>
+
 
       {loading && <Text>Loading...</Text>}
 
@@ -143,9 +142,6 @@ const MenuGroupScreen = () => {
               <View style={styles.areaTextContainer}>
                 <Text numberOfLines={1} ellipsizeMode="tail">
                   <Text style={[styles.areaName, { color: "#ff8c47" }]}>{menuGroup.name}</Text>
-                </Text>
-                <Text numberOfLines={2} style={styles.description}>
-                  {menuGroup.description}
                 </Text>
               </View>
 
