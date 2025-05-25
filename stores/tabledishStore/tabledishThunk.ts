@@ -45,10 +45,15 @@ const updateTableDish = createAsyncThunk(
     "tabledish/updateTableDish",
     async (data: ITableDishDTO, { rejectWithValue }): Promise<IAppResposeBase<ITableDishData>> => {
         try {
-            const response = await httpRequest.post<IAppResposeBase<ITableDishData>>(`/api/ordertabledish/update-table-dish`, {
+            const response = await httpRequest.post<IAppResposeBase<any>>(`/api/ordertabledish/update-dish-table`, {
                 tableId: data.tableId,
                 listDishId: data.listDishId,
             });
+            Toast.show({
+                type: "success",
+                text1: "Thành công",
+                text2: "Cập nhật món ăn thành công"
+            })
             return response.data;
         } catch (error: any) {
             return rejectWithValue(error.data) as any;

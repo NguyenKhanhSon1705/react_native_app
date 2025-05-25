@@ -180,7 +180,7 @@ export default function FoodListScreen() {
                                     key: food.id,
                                     selling_Price: food.selling_Price,
                                     quantity: food.quantity,
-                                    notes: "food.notes"
+                                    notes: "TODO"
                                 }))
                             })
                         );
@@ -460,68 +460,6 @@ export default function FoodListScreen() {
                     zIndex: 100
                 }}
             >
-                {/* <View>
-                    {
-                        isBtnUpdate ? <ButtonCustom
-                            mode="contained"
-                            icon={"plus"}
-                            style={{
-                                backgroundColor: "#5CB338",
-                            }}
-                            textColor="#fff"
-                            contentStyle={{ justifyContent: 'flex-start' }}
-                            onPress={() => handleUpdate()}
-                        >Cập nhật</ButtonCustom> :
-                            <ButtonCustom
-                                mode="contained"
-                                icon={"plus"}
-                                style={{
-                                    backgroundColor: "#5CB338",
-                                }}
-                                textColor="#fff"
-                                contentStyle={{ justifyContent: 'flex-start' }}
-                                onPress={() => handleCreate()}
-                            >Tạo bàn</ButtonCustom>
-
-                    }
-
-                    <ButtonCustom
-                        icon={"autorenew"}
-                        mode="contained"
-                        style={{
-                            backgroundColor: "#FA812F",
-                        }}
-                        textColor="#fff"
-                        contentStyle={{ justifyContent: 'flex-start' }}
-                        onPress={() => handleChangeTable()}
-                    >Chuyển bàn</ButtonCustom>
-
-                </View>
-                <View>
-                    <ButtonCustom
-                        mode="contained"
-                        icon={"contactless-payment"}
-                        style={{
-                            backgroundColor: "#4E71FF",
-                        }}
-                        textColor="#fff"
-                        contentStyle={{ justifyContent: 'flex-start' }}
-                        onPress={() => handlePayment()}
-                    >Thanh toán</ButtonCustom>
-                    <ButtonCustom
-                        mode="contained"
-
-                        icon={"close"}
-                        style={{
-                            backgroundColor: "#FF0B55",
-                        }}
-                        textColor="#fff"
-                        contentStyle={{ justifyContent: 'flex-start' }}
-                        onPress={handleAbortTable}
-                    >Hủy bàn</ButtonCustom>
-
-                </View> */}
-
                 <View>
                     {
                         isBtnUpdate
