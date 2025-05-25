@@ -61,7 +61,7 @@ const DishModal = ({ visible, onClose, onItemPress }: Props) => {
         menuGroupId: null
     });
     const debouseParamDish = useDebounce(paramDish, 500)
-    const [selectedItemId, setSelectedItemId] = useState<number | null>(null); // State để lưu item được chọn
+    const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
     const [isVisible, setIsVisible] = useState(false);
     const flatListRef = useRef<FlatList>(null);
     const [pageIndexCurrent, setPageIndexCurrent] = useState(2);
@@ -163,6 +163,8 @@ const DishModal = ({ visible, onClose, onItemPress }: Props) => {
     */
     const handleSubmit = (selectedItems: any) => {
         onItemPress && onItemPress(selectedItems);
+        onClose();
+
     };
 
     return (

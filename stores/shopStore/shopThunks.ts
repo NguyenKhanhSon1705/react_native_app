@@ -34,7 +34,6 @@ const updateShop = createAsyncThunk (
     async(params: FormData,{rejectWithValue}): Promise<IAppResposeBase<IShopData>> => {
         try {
             const response = await httpRequest.put<IAppResposeBase<IShopData>>("/api/shop/update-shop",params);
-            console.log('update',response)
             return response.data
         } catch (error:any) {
             console.error("API Error:", error);

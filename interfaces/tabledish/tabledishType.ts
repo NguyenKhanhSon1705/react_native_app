@@ -4,8 +4,8 @@ export interface IDish {
     selling_Price: number; // Giá bán
     unit_Name: string;
     image: string; // URL hình ảnh món ăn
-    quantity: number; // Số lượng món ăn
-    notes: string; // Ghi chú
+    quantity: number | 1;
+    notes: string | "notes"; // Ghi chú
     type: string;
 }
 
@@ -20,4 +20,25 @@ export interface ITableDishData {
     timeStart: string | null; // Thời gian bắt đầu (ISO string hoặc null)
     timeEnd: string | null; // Thời gian kết thúc (ISO string hoặc null)
     priceOfMunite: number; // Giá mỗi phút
+}
+
+export interface ITableDishDTO {
+    tableId: number;
+    listDishId: IListID[];
+}
+
+interface IListID {
+    key: number;
+    selling_Price: number;
+    quantity: number;
+    notes: string;
+}
+
+
+export interface IAbortOrder {
+    shop_id?: number;
+    table_Id: number;
+    reason_abort: string;
+    total_money: number;
+    total_quantity: number;
 }
