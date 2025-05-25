@@ -56,19 +56,17 @@ const menuGroupSlice = createSlice({
         state.error = action.error.message || "Failed to add menu group";
       })
 
-      // Handle updateMenuGroup thunk
+//update
       .addCase(menuGroupAction.updateMenuGroup.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      // The fulfilled action payload is IAppResposeBase<IMenuGroup>
-      .addCase(menuGroupAction.updateMenuGroup.fulfilled, (state, action: PayloadAction<IAppResposeBase<IMenuGroup>>) => {
-        // Check if menuGroupData and payload data are defined and add type assertion
+      .addCase(menuGroupAction.updateMenuGroup.fulfilled, (state, action) => {
         if (state.menuGroupData && action.payload.data) {
-          const updatedMenuGroup = action.payload.data as IMenuGroup; // Add type assertion
+          const updatedMenuGroup = action.payload.data as IMenuGroup; 
           const index = state.menuGroupData.items.findIndex((group) => group.id === updatedMenuGroup.id);
           if (index !== -1) {
-            state.menuGroupData.items[index] = updatedMenuGroup; // Use the asserted type
+            state.menuGroupData.items[index] = updatedMenuGroup;
           }
         }
         state.loading = false;
@@ -77,6 +75,8 @@ const menuGroupSlice = createSlice({
         state.loading = false;
         state.error = action.error.message || "Failed to update menu group";
       })
+
+
 
       // Handle deleteMenuGroup thunk
       .addCase(menuGroupAction.deleteMenuGroup.pending, (state) => {

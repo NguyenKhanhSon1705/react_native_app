@@ -33,11 +33,16 @@ export const getMenuGroupData = createAsyncThunk(
 
 export const addMenuGroup = createAsyncThunk(
   "menuGroup/addMenuGroup",
-  async (data: IMenuGroup, { rejectWithValue }): Promise<IAppResposeBase<IMenuGroup>> => {
+  async (formData: FormData, { rejectWithValue }): Promise<IAppResposeBase<IMenuGroup>> => {
     try {
       const response = await httpRequest.post<IAppResposeBase<IMenuGroup>>(
         `/api/menugroup/add-menu-group`,
-        data
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
       );
       return response.data;
     } catch (error: any) {
@@ -48,11 +53,23 @@ export const addMenuGroup = createAsyncThunk(
 
 export const updateMenuGroup = createAsyncThunk(
   "menuGroup/updateMenuGroup",
-  async (data: IMenuGroup, { rejectWithValue }): Promise<IAppResposeBase<IMenuGroup>> => {
+  async (formData: FormData, { rejectWithValue }): Promise<IAppResposeBase<IMenuGroup>> => {
     try {
+      const id = formData.get('id');
+      // Ensure order is a number
+      const order = formData.get('order');
+      if (order === null || order === '') {
+        formData.set('order', '0');
+      }
+
       const response = await httpRequest.put<IAppResposeBase<IMenuGroup>>(
-        `/api/menugroup/update-menu-group/${data.id}`,
-        data
+        `/api/menugroup/update-menu-group/${id}`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
       );
       return response.data;
     } catch (error: any) {

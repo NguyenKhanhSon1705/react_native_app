@@ -79,11 +79,11 @@ const MenuGroupScreen = () => {
     closeOptionsModal();
   };
 
-  const handleSaveMenuGroup = (menuGroup: Partial<IMenuGroup>) => {
-    if (menuGroup.id) {
-      dispatch(menuGroupAction.updateMenuGroup(menuGroup as IMenuGroup));
+  const handleSaveMenuGroup = (formData: FormData) => {
+    if (selectedMenuGroup) {
+      dispatch(menuGroupAction.updateMenuGroup(formData));
     } else {
-      dispatch(menuGroupAction.addMenuGroup(menuGroup as IMenuGroup));
+      dispatch(menuGroupAction.addMenuGroup(formData));
     }
     closeMenuGroupModal();
   };
@@ -132,12 +132,20 @@ const MenuGroupScreen = () => {
       <ScrollView contentContainerStyle={styles.gridContainer}>
         {menuGroupList.map((menuGroup: IMenuGroup) => (
           <View key={menuGroup.id} style={styles.areaCard}>
-            <FontAwesome5
-              name="utensils"
-              size={50}
-              color="#ff8c47"
-              style={styles.areaImage}
-            />
+            {menuGroup.image ? (
+              <Image 
+                source={{ uri: menuGroup.image }} 
+                style={styles.areaImage}
+                resizeMode="cover"
+              />
+            ) : (
+              <FontAwesome5
+                name="utensils"
+                size={50}
+                color="#ff8c47"
+                style={styles.areaImage}
+              />
+            )}
             <View style={styles.areaDetails}>
               <View style={styles.areaTextContainer}>
                 <Text numberOfLines={1} ellipsizeMode="tail">
@@ -240,11 +248,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 15,
     elevation: 3,
+    overflow: 'hidden',
   },
   areaImage: {
-    resizeMode: "cover",
+    width: '100%',
+    height: 150,
     alignSelf: "center",
-    marginTop: 10,
+    marginTop: 0,
   },
   areaDetails: {
     padding: 10,

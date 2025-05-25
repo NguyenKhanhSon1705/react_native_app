@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { Modal, View, Text, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
 
 interface MenuGroupOptionsModalProps {
   visible: boolean;
@@ -16,6 +16,18 @@ const MenuGroupOptionsModal: React.FC<MenuGroupOptionsModalProps> = ({
   onDelete,
   position,
 }) => {
+  const screenWidth = Dimensions.get('window').width;
+  const modalWidth = 120; // Approximate width of the modal
+  const padding = 20; // Safe padding from screen edges
+
+  // Calculate the left position to ensure the modal stays within screen bounds
+  const calculateLeftPosition = () => {
+    if (position.left + modalWidth > screenWidth - padding) {
+      return position.left - modalWidth;
+    }
+    return position.left;
+  };
+
   return (
     <Modal
       visible={visible}
@@ -29,7 +41,7 @@ const MenuGroupOptionsModal: React.FC<MenuGroupOptionsModalProps> = ({
             styles.modalContent,
             {
               top: position.top,
-              left: position.left,
+              left: calculateLeftPosition(),
             },
           ]}
         >
@@ -63,6 +75,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
+    minWidth: 120,
   },
   optionButton: {
     paddingVertical: 10,

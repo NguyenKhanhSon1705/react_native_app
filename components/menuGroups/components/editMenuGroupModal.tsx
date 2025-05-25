@@ -12,11 +12,12 @@ import {
 } from "react-native";
 import { IMenuGroup } from "@/interfaces/menuGroup/MenuGroupTypes";
 import * as ImagePicker from "expo-image-picker";
+import { createImageFormData } from "@/utils/functions/createImageFormData";
 
 interface MenuGroupModalProps {
   visible: boolean;
   onClose: () => void;
-  onSave: (menuGroup: Partial<IMenuGroup>) => void;
+  onSave: (formData: FormData) => void;
   menuGroup: IMenuGroup | null;
 }
 
@@ -49,15 +50,17 @@ const MenuGroupModal: React.FC<MenuGroupModalProps> = ({
   }, [menuGroup]);
 
   const handleSave = () => {
-    const updatedMenuGroup: Partial<IMenuGroup> = {
+    const menuGroupData = {
       id: menuGroup?.id,
       name,
       description,
       image,
-      order,
+      order: order ?? 0,
       status,
     };
-    onSave(updatedMenuGroup);
+
+    const formData = createImageFormData(menuGroupData, 'image');
+    onSave(formData);
   };
 
   const handleClose = () => {
@@ -97,7 +100,7 @@ const MenuGroupModal: React.FC<MenuGroupModalProps> = ({
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.modalContent}>
               <Text style={styles.modalTitle}>
-                {menuGroup ? "Chỉnh sửa nhóm món" : "Thêm nhóm món mới"}
+                {menuGroup ? "Chỉnh sửa thực đơn" : "Thêm thực đơn mới"}
               </Text>
 
               <View style={styles.imageContainer}>
@@ -114,10 +117,10 @@ const MenuGroupModal: React.FC<MenuGroupModalProps> = ({
               </View>
 
               <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Tên nhóm món *</Text>
+                <Text style={styles.inputLabel}>Tên thực đơn *</Text>
                 <TextInput
                   style={styles.input}
-                  placeholder="Nhập tên nhóm món"
+                  placeholder="Nhập tên thực đơn"
                   value={name}
                   onChangeText={setName}
                 />
